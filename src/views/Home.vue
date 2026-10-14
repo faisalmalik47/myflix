@@ -159,15 +159,13 @@ const router = useRouter()
 const homeSearchQuery = ref('')
 
 const { user, profile } = useAuth()
-const { watchlist } = useWatchlist()
+const { items: watchlistItems } = useWatchlist()
 
 const userDisplayName = computed(() => {
   const name = user.value?.user_metadata?.full_name || profile.value?.username || user.value?.email?.split('@')[0]
   if (!name) return 'You'
   return name.charAt(0).toUpperCase() + name.slice(1)
 })
-
-const watchlistItems = computed(() => watchlist.value || [])
 
 const handleHomeSearch = () => {
   if (homeSearchQuery.value.trim()) {

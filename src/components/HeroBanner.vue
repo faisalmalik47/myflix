@@ -1,10 +1,7 @@
 <template>
   <div 
     v-if="item" 
-    class="relative w-full overflow-hidden transition-all duration-300
-           /* Mobile Netflix Floating Framed Card */
-           mx-auto max-w-[94%] sm:max-w-none mt-24 mb-4 sm:my-0 rounded-[26px] sm:rounded-none border border-white/10 sm:border-0 shadow-[0_20px_50px_rgba(0,0,0,0.85)] sm:shadow-none
-           h-[66vh] min-h-[480px] max-h-[600px] sm:h-[85vh] sm:min-h-[500px] sm:max-h-none bg-surface flex items-end sm:items-center"
+    class="relative w-full overflow-hidden transition-all duration-300 mx-auto max-w-[94%] sm:max-w-none mt-24 mb-4 sm:my-0 rounded-[26px] sm:rounded-none border border-white/10 sm:border-0 shadow-[0_20px_50px_rgba(0,0,0,0.85)] sm:shadow-none h-[66vh] min-h-[480px] max-h-[600px] sm:h-[85vh] sm:min-h-[500px] sm:max-h-none bg-surface flex items-end sm:items-center"
   >
     <!-- Background Image with Multi-layer Cinematic Vignette -->
     <div class="absolute inset-0 select-none pointer-events-none">
@@ -175,7 +172,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { backdrop, getMovie, getTvShow } from '@/api/tmdb.js'
+import { backdrop, poster, getMovie, getTvShow } from '@/api/tmdb.js'
 import { useWatchlist } from '@/composables/useWatchlist.js'
 import { useRecommendation } from '@/composables/useRecommendation.js'
 import TrailerModal from '@/components/TrailerModal.vue'
