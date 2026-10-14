@@ -19,6 +19,7 @@ const routes = [
   { path: '/person/:id', name: 'PersonDetail', component: () => import('@/views/PersonDetail.vue') },
   { path: '/login', name: 'Login', component: () => import('@/views/Login.vue') },
   { path: '/auth/callback', name: 'AuthCallback', component: () => import('@/views/AuthCallback.vue') },
+  { path: '/platforms/:id/:type?', name: 'PlatformDetail', component: () => import('@/views/PlatformDetail.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 

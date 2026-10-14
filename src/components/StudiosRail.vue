@@ -1,159 +1,114 @@
 <template>
-  <div class="space-y-3">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#E50914] shadow-[0_0_10px_rgba(229,9,20,0.8)]"></span>
-        <h2 class="text-xl md:text-2xl font-display tracking-wide uppercase text-white font-bold">
-          Studios & Platforms
-        </h2>
-      </div>
-      <span class="text-xs text-bone-400 font-mono">Stream by Network</span>
+  <section id="watch-by-platform" class="relative mb-7 md:mb-8 scroll-mt-[4.5rem]" aria-labelledby="platforms-row-heading">
+    <!-- Row Header -->
+    <div class="mb-2 px-0 md:mb-2.5 flex items-center justify-between">
+      <h2 id="platforms-row-heading" class="text-[17px] font-semibold leading-tight tracking-[-0.02em] text-white md:text-[18px] lg:text-[19px]">
+        Studios & Platforms
+      </h2>
+      <span class="text-xs text-bone-400 font-medium hidden sm:inline-block">Curated Networks</span>
     </div>
 
-    <!-- Studios Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+    <!-- Scroller Rail -->
+    <div class="group/row relative" data-row-rail="true">
+      <!-- Left Chevron Button -->
       <button
-        v-for="studio in studios"
-        :key="studio.id"
-        @click="selectStudio(studio)"
-        :class="[
-          'relative p-3.5 rounded-xl border transition-all duration-300 flex flex-col items-center justify-center gap-1.5 group overflow-hidden cursor-pointer active:scale-95 shadow-md',
-          activeStudioId === studio.id
-            ? 'bg-gradient-to-b from-[#E50914]/20 to-surface-200 border-[#E50914] shadow-[0_0_20px_rgba(229,9,20,0.4)]'
-            : 'bg-surface-100 hover:bg-surface-200 border-white/8 hover:border-white/20 hover:-translate-y-0.5'
-        ]"
+        v-if="canScrollLeft"
+        type="button"
+        @click="scroll(-1)"
+        class="absolute left-0 top-1/2 z-20 hidden md:flex -translate-y-1/2 items-center justify-center w-10 h-full bg-gradient-to-r from-black/80 via-black/40 to-transparent text-white opacity-0 group-hover/row:opacity-100 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+        aria-label="Scroll Studios and Platforms left"
       >
-        <!-- Ambient background glow -->
-        <div 
-          class="absolute inset-0 opacity-10 group-hover:opacity-25 transition-opacity pointer-events-none"
-          :style="{ backgroundColor: studio.color }"
-        ></div>
-
-        <!-- Studio Brand Logo / Text -->
-        <div class="relative z-10 flex flex-col items-center">
-          <span 
-            class="font-display text-base sm:text-lg font-black tracking-wider uppercase text-white group-hover:scale-105 transition-transform"
-            :style="{ textShadow: `0 0 15px ${studio.color}80` }"
-          >
-            {{ studio.name }}
-          </span>
-          <span class="text-[10px] text-bone-400 font-mono tracking-tight">
-            Originals
-          </span>
-        </div>
-
-        <!-- Active indicator -->
-        <span 
-          v-if="activeStudioId === studio.id" 
-          class="w-1.5 h-1.5 rounded-full bg-[#E50914] shadow-[0_0_8px_#E50914] absolute bottom-1.5"
-        ></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
+        </svg>
       </button>
-    </div>
 
-    <!-- Studio Selected Content Modal / Expansion -->
-    <transition
-      enter-active-class="transition duration-300 ease-out"
-      leave-active-class="transition duration-200 ease-in"
-      enter-from-class="opacity-0 -translate-y-2"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 -translate-y-2"
-    >
-      <div 
-        v-if="selectedStudio && studioTitles.length > 0"
-        class="mt-4 p-4 md:p-6 rounded-2xl bg-surface-100 border border-white/10 shadow-2xl relative"
+      <!-- Right Chevron Button -->
+      <button
+        v-if="canScrollRight"
+        type="button"
+        @click="scroll(1)"
+        class="absolute right-0 top-1/2 z-20 hidden md:flex -translate-y-1/2 items-center justify-center w-10 h-full bg-gradient-to-l from-black/80 via-black/40 to-transparent text-white opacity-0 group-hover/row:opacity-100 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+        aria-label="Scroll Studios and Platforms right"
       >
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="text-xs uppercase font-mono px-2 py-0.5 rounded bg-[#E50914]/20 text-[#E50914] border border-[#E50914]/30 font-bold">
-              {{ selectedStudio.name }} Originals
-            </span>
-            <span class="text-xs text-bone-400">Top titles available to stream</span>
-          </div>
-          <button 
-            @click="clearSelection" 
-            class="text-xs text-bone-400 hover:text-white px-2.5 py-1 rounded-lg bg-surface-200 hover:bg-surface-300 transition-colors"
-          >
-            Close &times;
-          </button>
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
 
-        <!-- Titles Row -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-          <div 
-            v-for="item in studioTitles.slice(0, 6)"
-            :key="item.id"
-            @click="goToPlay(item)"
-            class="group cursor-pointer rounded-xl overflow-hidden bg-surface-200 border border-white/8 hover:border-[#E50914] transition-all hover:scale-105"
-          >
-            <div class="aspect-[2/3] w-full relative">
-              <img 
-                v-if="item.poster_path"
-                :src="poster(item.poster_path, 'w342')"
-                :alt="item.title || item.name"
-                class="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-xs font-bold text-white line-clamp-1">▶ Watch</span>
-              </div>
-            </div>
-            <div class="p-2">
-              <h4 class="text-xs font-bold text-white truncate">{{ item.title || item.name }}</h4>
-              <span class="text-[10px] text-[#E50914] font-mono font-bold">★ {{ (item.vote_average || 0).toFixed(1) }}</span>
-            </div>
-          </div>
-        </div>
+      <!-- Cards Track -->
+      <div
+        ref="scrollerRef"
+        @scroll="checkScroll"
+        class="scrollbar-hide flex min-w-0 gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain touch-pan-x touch-pan-y md:gap-3.5 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] pt-1 pb-3 md:pt-2 md:pb-4"
+      >
+        <router-link
+          v-for="platform in platforms"
+          :key="platform.provider_id"
+          :to="`/platforms/${platform.provider_id}/movie`"
+          class="group relative isolate block aspect-video w-[calc((100vw-2rem-0.75rem)/2.15)] max-w-[168px] shrink-0 overflow-hidden rounded-xl text-white transition-all duration-300 ease-out min-[480px]:w-[calc((100vw-2rem-0.75rem)/2.65)] min-[480px]:max-w-[180px] md:w-[calc((100vw-4rem-1rem)/3.35)] md:max-w-[210px] lg:w-[calc((100vw-8rem-1rem)/4.35)] lg:max-w-[232px] xl:w-[calc((100vw-8rem-1.25rem)/5.35)] xl:max-w-[248px] hover:scale-[1.03] active:scale-95 shadow-md hover:shadow-[0_8px_25px_rgba(0,0,0,0.6)]"
+          :style="{ background: `linear-gradient(145deg, ${platform.accent} 0%, color-mix(in srgb, ${platform.accent} 58%, #050505) 100%)` }"
+          :aria-label="`Browse ${platform.provider_name}`"
+        >
+          <!-- Radial gloss highlight -->
+          <span
+            class="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_80%_-10%,rgba(255,255,255,0.18),transparent_55%)]"
+            aria-hidden="true"
+          />
+
+          <!-- Platform Logo -->
+          <img
+            :src="platform.local_logo_path"
+            :alt="platform.provider_name"
+            width="220"
+            height="110"
+            loading="lazy"
+            :class="[
+              'absolute left-1/2 top-1/2 max-h-[52%] max-w-[78%] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition-transform duration-[450ms] group-hover:scale-[1.06]',
+              platform.invertLogo ? 'brightness-0 invert' : ''
+            ]"
+          />
+        </router-link>
       </div>
-    </transition>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { STUDIOS, getStudioTitles, poster } from '@/api/tmdb.js'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { CURATED_STREAMING_PLATFORMS } from '@/api/tmdb.js'
 
-const router = useRouter()
-const studios = STUDIOS
-const activeStudioId = ref('')
-const selectedStudio = ref(null)
-const studioTitles = ref([])
-const loading = ref(false)
+const platforms = CURATED_STREAMING_PLATFORMS
+const scrollerRef = ref(null)
+const canScrollLeft = ref(false)
+const canScrollRight = ref(true)
 
-const selectStudio = async (studio) => {
-  if (activeStudioId.value === studio.id) {
-    clearSelection()
-    return
-  }
-
-  activeStudioId.value = studio.id
-  selectedStudio.value = studio
-  loading.value = true
-
-  try {
-    const data = await getStudioTitles(studio)
-    studioTitles.value = data.results || []
-  } catch (e) {
-    console.error('Failed to load studio titles:', e)
-  } finally {
-    loading.value = false
-  }
+const checkScroll = () => {
+  const el = scrollerRef.value
+  if (!el) return
+  const maxScroll = el.scrollWidth - el.clientWidth
+  canScrollLeft.value = el.scrollLeft > 10
+  canScrollRight.value = el.scrollLeft < maxScroll - 10
 }
 
-const clearSelection = () => {
-  activeStudioId.value = ''
-  selectedStudio.value = null
-  studioTitles.value = []
+const scroll = (direction) => {
+  const el = scrollerRef.value
+  if (!el) return
+  const firstCard = el.querySelector('a')
+  const gap = 14
+  const cardWidth = firstCard ? firstCard.getBoundingClientRect().width + gap : el.clientWidth * 0.7
+  el.scrollBy({
+    left: direction * cardWidth * 2.5,
+    behavior: 'smooth'
+  })
 }
 
-const goToPlay = (item) => {
-  const type = item.title ? 'movie' : 'tv'
-  if (type === 'tv') {
-    router.push({ name: 'StreamTv', params: { id: item.id, season: 1, episode: 1 } })
-  } else {
-    router.push({ name: 'StreamMovie', params: { id: item.id } })
-  }
-}
+onMounted(() => {
+  checkScroll()
+  window.addEventListener('resize', checkScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScroll)
+})
 </script>
