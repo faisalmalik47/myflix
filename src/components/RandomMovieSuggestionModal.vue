@@ -94,7 +94,7 @@
 
               <!-- Actions -->
               <div class="flex flex-wrap items-center gap-2.5">
-                <!-- Play -->
+                <!-- Play Now -->
                 <button
                   @click="watchNow"
                   class="flex items-center gap-2 bg-[#E50914] hover:bg-[#FF1E27] text-white px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] hover:scale-105 active:scale-95"
@@ -102,7 +102,22 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 fill-current" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                   </svg>
-                  <span>Watch Now</span>
+                  <span>Play Now</span>
+                </button>
+
+                <!-- Trailer Button (Right Beside Play Now) -->
+                <button
+                  @click="openTrailer"
+                  :disabled="loadingTrailer"
+                  class="flex items-center gap-1.5 bg-surface-100 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-4 py-2.5 rounded-full text-xs font-semibold transition-all border border-white/10 hover:border-white/25 active:scale-95 disabled:opacity-50"
+                  title="Watch Trailer"
+                >
+                  <svg v-if="!loadingTrailer" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span v-else class="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-[#E50914] animate-spin"></span>
+                  <span>Trailer</span>
                 </button>
 
                 <!-- Watchlist -->
@@ -143,21 +158,34 @@
             </div>
           </div>
         </div>
+
+        <!-- Trailer Modal Inside Suggestion -->
+        <TrailerModal
+          v-if="showTrailer"
+          :trailerKey="trailerKey"
+          :show="showTrailer"
+          @close="showTrailer = false"
+        />
       </div>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { backdrop, poster } from '@/api/tmdb.js'
+import { backdrop, poster, getMovie } from '@/api/tmdb.js'
 import { useRecommendation } from '@/composables/useRecommendation.js'
 import { useWatchlist } from '@/composables/useWatchlist.js'
+import TrailerModal from '@/components/TrailerModal.vue'
 
 const router = useRouter()
 const { isOpen, isLoading, currentSuggestion, rollAgain, closeSuggestion } = useRecommendation()
 const { isInWatchlist, toggleWatchlist } = useWatchlist()
+
+const showTrailer = ref(false)
+const trailerKey = ref('')
+const loadingTrailer = ref(false)
 
 const isInList = computed(() => {
   if (!currentSuggestion.value) return false
@@ -176,6 +204,35 @@ const watchNow = () => {
   closeSuggestion()
   router.push({ name: 'StreamMovie', params: { id } })
 }
+
+const openTrailer = async () => {
+  if (!currentSuggestion.value) return
+  if (trailerKey.value) {
+    showTrailer.value = true
+    return
+  }
+  loadingTrailer.value = true
+  try {
+    const details = await getMovie(currentSuggestion.value.id, { append_to_response: 'videos' })
+    const videos = details?.videos?.results || []
+    const yt = videos.filter(v => v.site?.toLowerCase() === 'youtube' && v.key)
+    const officialTrailer = yt.find(v => v.type?.toLowerCase() === 'trailer' && v.official)
+    const anyTrailer = yt.find(v => v.type?.toLowerCase() === 'trailer')
+    const teaser = yt.find(v => v.type?.toLowerCase() === 'teaser')
+    const clip = yt.find(v => v.type?.toLowerCase() === 'clip')
+    trailerKey.value = officialTrailer?.key || anyTrailer?.key || teaser?.key || clip?.key || yt[0]?.key || ''
+  } catch (err) {
+    console.error('Failed to fetch trailer for recommendation:', err)
+  } finally {
+    loadingTrailer.value = false
+    showTrailer.value = true
+  }
+}
+
+watch(currentSuggestion, () => {
+  trailerKey.value = ''
+  showTrailer.value = false
+})
 
 const viewDetails = () => {
   if (!currentSuggestion.value) return

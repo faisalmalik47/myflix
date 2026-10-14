@@ -100,6 +100,16 @@
                 </svg>
                 Trailer
               </button>
+
+              <button 
+                @click="scrollToMoreLikeThis"
+                class="flex items-center gap-2 bg-surface-100 hover:bg-surface-200 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200 border border-white/10 hover:border-white/25"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-bone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                More Like This
+              </button>
             </div>
           </div>
         </div>
@@ -113,14 +123,16 @@
         </div>
       </div>
       
-      <!-- Similar -->
-      <div v-if="movie.similar?.results?.length > 0" class="container mx-auto px-4 mt-12">
-        <ContentRail title="Similar Movies" :items="movie.similar.results" />
-      </div>
-      
-      <!-- Recommended -->
-      <div v-if="movie.recommendations?.results?.length > 0" class="container mx-auto px-4 mt-12">
-        <ContentRail title="Recommended For You" :items="movie.recommendations.results" />
+      <!-- More Like This / Similar -->
+      <div id="more-like-this" class="scroll-mt-24">
+        <div v-if="movie.similar?.results?.length > 0" class="container mx-auto px-4 mt-12">
+          <ContentRail title="More Like This" :items="movie.similar.results" />
+        </div>
+        
+        <!-- Recommended -->
+        <div v-if="movie.recommendations?.results?.length > 0" class="container mx-auto px-4 mt-12">
+          <ContentRail title="Recommended For You" :items="movie.recommendations.results" />
+        </div>
       </div>
     </div>
     
@@ -157,6 +169,13 @@ const inWatchlist = computed(() => {
 const handleToggleWatchlist = () => {
   if (movie.value) {
     toggleWatchlist(movie.value, 'movie')
+  }
+}
+
+const scrollToMoreLikeThis = () => {
+  const el = document.getElementById('more-like-this')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
 

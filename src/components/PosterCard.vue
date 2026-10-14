@@ -54,7 +54,7 @@
       <div class="text-[#8a8270] text-xs font-mono flex items-center justify-between">
         <span>{{ (item.release_date || item.first_air_date || '').split('-')[0] }}</span>
         <span class="inline-flex items-center text-[10px] text-[#E50914] font-semibold group-hover:translate-x-0.5 transition-transform">
-          Play &rarr;
+          Details &rarr;
         </span>
       </div>
     </div>

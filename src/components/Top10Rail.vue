@@ -199,11 +199,11 @@ const scroll = (direction) => {
 }
 
 const goToPlay = (item) => {
-  const type = item.media_type || props.mediaType
+  const type = item.media_type || props.mediaType || (item.name ? 'tv' : 'movie')
   if (type === 'tv') {
-    router.push({ name: 'StreamTv', params: { id: item.id, season: 1, episode: 1 } })
+    router.push({ name: 'TvDetail', params: { id: item.id } })
   } else {
-    router.push({ name: 'StreamMovie', params: { id: item.id } })
+    router.push({ name: 'MovieDetail', params: { id: item.id } })
   }
 }
 
