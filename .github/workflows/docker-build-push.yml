@@ -88,8 +88,17 @@ jobs:
             # 2. Pull the newly published image
             docker compose pull cinextma
 
-            # 3. Recreate container with zero downtime
-            docker compose up -d cinextma
+            # 3. Clean up any stale or conflicting cinextma containers
+            echo "🧹 Removing conflicting cinextma containers..."
+            docker ps -a --filter "name=cinextma" --format "{{.ID}}" | xargs -r docker rm -f || true
+
+            # 4. Recreate container cleanly
+            docker compose up -d --force-recreate --remove-orphans cinextma
+
+            # 5. Clean up old unused myflix images & dangling layers to free disk space
+            echo "🧹 Cleaning up older images on server..."
+            docker images --filter=reference='*myflix*' --format "{{.Repository}}:{{.Tag}}" | grep -v "$COMMIT_ID" | xargs -r docker rmi -f || true
+            docker image prune -f
 
             echo "✅ Successfully deployed MyFlix ($COMMIT_ID)!"
           EOF
