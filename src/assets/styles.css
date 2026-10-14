@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink-900: #070709;
+  --ink-850: #0a0a0c;
+  --ink-800: #111114;
+  --ink-700: #18181c;
+  --ink-600: #23232a;
+  --ink-500: #32323c;
+  --bone-50: #ffffff;
+  --bone-100: #f4f4f5;
+  --bone-200: #e4e4e7;
+  --bone-300: #d4d4d8;
+  --bone-400: #a1a1aa;
+  --bone-500: #71717a;
+  --ember: #E50914;
+  --ember-rgb: 229, 9, 20;
+  --ember-600: #B81D24;
+  --ember-700: #831010;
+  --ember-glow: rgba(var(--ember-rgb), 0.45);
+  --gold-leaf: #E50914;
+  --gold-leaf-soft: rgba(229, 9, 20, 0.2);
+  --rule: rgba(255, 255, 255, 0.08);
+  --rule-strong: rgba(255, 255, 255, 0.16);
+  --surface-tint: rgba(229, 9, 20, 0.05);
+  --surface-tint-hover: rgba(229, 9, 20, 0.12);
+  --overlay-scrim: rgba(10, 10, 12, 0.85);
+  --success: #22c55e;
+  --warn: #eab308;
+  --danger: #ef4444;
+  --ambient: var(--ember-rgb);
+  --font-display: "Bebas Neue", "Inter", sans-serif;
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
+  --shadow-bloom: 0 0 80px rgba(var(--ambient), 0.22);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.18s;
+  --dur-base: 0.32s;
+  --dur-slow: 0.64s;
+}
+
+body {
+  background-color: var(--ink-900);
+  color: var(--bone-50);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+}
+
+/* Cineby Display Heading */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+/* Cineby Monospace */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Minimalist Dark Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-600);
+  border-radius: var(--r-pill);
+  border: 2px solid var(--ink-900);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-500);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Cineby Signature Pills (lm-pill) */
+.lm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.lm-pill--sm {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+}
+.lm-pill--md {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+}
+.lm-pill--neutral {
+  color: var(--bone-200);
+  background: var(--surface-tint);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.lm-pill--ember {
+  color: var(--ember);
+  background: rgba(var(--ember-rgb), 0.12);
+  box-shadow: inset 0 0 0 1px rgba(var(--ember-rgb), 0.35);
+}
+.lm-pill--gold {
+  color: var(--gold-leaf);
+  background: var(--gold-leaf-soft);
+  box-shadow: inset 0 0 0 1px rgba(201, 167, 106, 0.3);
+}
+.lm-pill--success {
+  color: var(--success);
+  background: rgba(107, 163, 104, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(107, 163, 104, 0.35);
+}
+.lm-pill--danger {
+  color: var(--danger);
+  background: rgba(201, 78, 61, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(201, 78, 61, 0.35);
+}
+
+/* Glass Panels with Cineby Tint */
+.glass-panel {
+  background: rgba(19, 17, 14, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--rule);
+}
+
+.glass-nav {
+  background: rgba(11, 10, 8, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.glass-card {
+  background: var(--ink-800);
+  border: 1px solid var(--rule);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.glass-card:hover {
+  background: var(--ink-700);
+  border-color: var(--rule-strong);
+}
+
+/* Card Hover Elevation */
+.poster-card {
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s ease, border-color 0.32s ease;
+  will-change: transform;
+}
+.poster-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(var(--ember-rgb), 0.25);
+}
+
+/* Ambient Backlight Bloom behind Video Player */
+.stream-frame__bloom {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  bottom: -10%;
+  left: -5%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(80px) saturate(1.4) brightness(0.55);
+  opacity: 0.55;
+  z-index: -1;
+  pointer-events: none;
+}
+.stream-frame__bloom:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, var(--ink-900) 78%);
+}
+
+/* Spinners & Animations */
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spinSlow 1.2s linear infinite;
+}
