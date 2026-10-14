@@ -26,7 +26,7 @@
 
           <div class="min-w-0">
             <div class="flex items-center gap-2 text-xs text-[#8a8270]">
-              <router-link to="/" class="hover:text-[#f5efe4] transition-colors">Cineby</router-link>
+              <router-link to="/" class="hover:text-[#f5efe4] transition-colors">MyFlix</router-link>
               <span>/</span>
               <router-link to="/movies" class="hover:text-[#f5efe4] transition-colors">Movies</router-link>
             </div>
