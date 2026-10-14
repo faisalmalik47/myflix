@@ -53,9 +53,70 @@ npm run preview
 ---
 
 ## 🐳 Docker Deployment
+
+The production image is built automatically on push via GitHub Actions and published to Docker Hub at [`faisalmaliik/myflix`](https://hub.docker.com/r/faisalmaliik/myflix).
+
+### 🏷️ Current Target Release Tag: `300f353`
+
 ```bash
-docker build -t myflix:latest .
-docker run -d -p 8090:80 --name myflix myflix:latest
+docker pull faisalmaliik/myflix:300f353
+```
+
+---
+
+## 🛠️ Home Server Deployment (`cloud-server`)
+
+To replace or update the `cinextma` service in your server's `docker-compose.yml` (`/home/phil/server/docker-compose.yml`):
+
+### 1. Update `docker-compose.yml`
+
+Update the `cinextma` service block to use the **`300f353`** image tag and forward port `8090` to container port `80` (Nginx):
+
+```yaml
+  cinextma:
+    image: faisalmaliik/myflix:300f353
+    container_name: cinextma
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      - NEXT_PUBLIC_TMDB_ACCESS_TOKEN=your_tmdb_access_token_here
+      - NEXT_PUBLIC_SUPABASE_URL=https://cnnsouwudpcukmzxftcc.supabase.co
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key_here
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+```
+
+> **Note on Environment Mappings:**
+> MyFlix's entrypoint script (`docker-entrypoint.sh`) dynamically generates `/usr/share/nginx/html/env-config.js` (`window.__ENV__`) at container boot. It automatically detects and supports:
+> 1. Standard `VITE_*` environment variables (`VITE_TMDB_ACCESS_TOKEN`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
+> 2. Existing `NEXT_PUBLIC_*` server variables (`NEXT_PUBLIC_TMDB_ACCESS_TOKEN`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
+> 3. Optional direct volume mount for `.env`:
+>    ```yaml
+>    volumes:
+>      - /home/phil/server/.env:/app/.env:ro
+>    ```
+
+### 2. Pull & Restart Service on Server
+
+Run on the server:
+
+```bash
+cd ~/server
+docker compose pull cinextma
+docker compose up -d cinextma
+```
+
+### 3. Verify Container Environment & Logs
+
+```bash
+# Check if the container booted properly
+docker logs cinextma
+
+# Verify that env-config.js was populated with your keys
+docker exec cinextma cat /usr/share/nginx/html/env-config.js
 ```
 
 ---
