@@ -1,12 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#0a0a0c] text-white pb-20 md:pb-8 pt-4">
-    <!-- Top Bar Header (Desktop & Mobile) -->
-    <div class="relative overflow-hidden border-b border-white/[0.08] mb-6">
+  <div class="min-h-screen bg-[#0a0a0c] text-white pb-20 md:pb-8 pt-20 md:pt-24">
+    <!-- Top Bar Header (Desktop & Mobile with smooth scroll fade & lift transition) -->
+    <div
+      class="relative overflow-hidden border-b border-white/[0.08] mb-4 origin-top transition-all"
+      :style="headerStyle"
+    >
       <!-- Ambient background subtle radial glow -->
       <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_75%_55%_at_50%_-25%,rgba(229,9,20,0.15),transparent_58%)]" aria-hidden="true"></div>
       <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0a0a0c]" aria-hidden="true"></div>
 
-      <div class="relative px-4 md:px-8 pt-4 pb-6 lg:pb-8 max-w-[1920px] mx-auto">
+      <div class="relative px-4 md:px-8 pt-2 pb-6 lg:pb-8 max-w-[1920px] mx-auto">
         <div class="flex flex-row gap-6 lg:gap-8 items-start lg:items-center">
           <!-- Square / Rounded Logo Card -->
           <div class="relative h-[92px] w-[92px] lg:h-[116px] lg:w-[116px] shrink-0 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.03] p-3 lg:p-4 shadow-[0_12px_48px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.12] flex items-center justify-center">
@@ -36,7 +39,7 @@
 
     <div class="px-4 md:px-8 max-w-[1920px] mx-auto space-y-5">
       <!-- Unified Filter Bar (Matches Redflix Pill Bar) -->
-      <div class="sticky top-16 z-30 -mx-4 md:mx-0 border-b border-white/[0.08] bg-[#0a0a0c]/95 px-4 py-2.5 backdrop-blur-xl md:rounded-2xl md:border md:border-white/10 md:bg-[#111114]/95 md:px-4 md:py-3 md:shadow-2xl">
+      <div class="sticky top-[4.25rem] md:top-[4.5rem] z-30 -mx-4 md:mx-0 border-b border-white/[0.08] bg-[#0a0a0c]/98 px-4 py-2.5 backdrop-blur-2xl md:rounded-2xl md:border md:border-white/10 md:bg-[#111114]/98 md:px-4 md:py-3 md:shadow-2xl transition-all">
         <div class="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-4">
           <!-- Left Controls (Movies/TV toggle, Platform dropdown, Sort, Age) -->
           <div class="flex items-center justify-between gap-2 md:justify-start md:gap-3 shrink-0 flex-wrap sm:flex-nowrap">
@@ -232,7 +235,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CURATED_STREAMING_PLATFORMS, getPlatformTitles } from '@/api/tmdb.js'
 
@@ -245,6 +248,26 @@ const activeType = ref(route.params.type === 'tv' ? 'tv' : 'movie')
 
 const currentPlatform = computed(() => {
   return platforms.find(p => p.provider_id === providerId.value) || platforms[0]
+})
+
+// Scroll tracking for graceful header dissolve & lift transition
+const scrollY = ref(0)
+const onScroll = () => {
+  scrollY.value = window.scrollY
+}
+
+const headerStyle = computed(() => {
+  // As user scrolls from 0 to 110px, opacity drops to 0 and gently lifts
+  const progress = Math.min(Math.max(scrollY.value / 110, 0), 1)
+  const opacity = Math.max(0, 1 - progress * 1.3).toFixed(2)
+  const translateY = (-progress * 22).toFixed(1)
+  const scale = (1 - progress * 0.05).toFixed(3)
+  return {
+    opacity: Number(opacity),
+    transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`,
+    pointerEvents: progress > 0.7 ? 'none' : 'auto',
+    transition: 'opacity 0.12s ease-out, transform 0.12s ease-out'
+  }
 })
 
 const selectedSort = ref('popularity.desc')
@@ -411,6 +434,11 @@ watch([() => route.params.id, () => route.params.type], () => {
 })
 
 onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
   fetchTitles(true)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
 })
 </script>

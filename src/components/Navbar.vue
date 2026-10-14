@@ -1,10 +1,11 @@
 <template>
   <header>
-    <!-- Top Sticky Navbar -->
     <nav
       :class="[
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out',
-        isScrolled ? 'bg-[#0a0a0c]/95 backdrop-blur-md py-3 shadow-[0_4px_25px_rgba(0,0,0,0.8)] border-b border-white/5' : 'bg-gradient-to-b from-black/95 via-black/50 to-transparent py-4'
+        (isScrolled || isPlatformPage)
+          ? 'bg-[#0a0a0c]/98 backdrop-blur-xl py-3 shadow-[0_4px_25px_rgba(0,0,0,0.9)] border-b border-white/5'
+          : 'bg-gradient-to-b from-black/95 via-black/50 to-transparent py-4'
       ]"
     >
       <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
@@ -196,15 +197,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth.js'
 
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
 const userMenuOpen = ref(false)
 const router = useRouter()
+const route = useRoute()
 const { user, profile, signOut } = useAuth()
+
+const isPlatformPage = computed(() => route.path.startsWith('/platforms'))
 
 const navLinks = [
   { name: 'Home', path: '/' },
