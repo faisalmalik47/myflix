@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#0a0a0c] text-white pb-20 md:pb-8 pt-20 md:pt-24">
+  <div class="min-h-screen bg-[#0a0a0c] text-white pb-20 md:pb-8 pt-24 sm:pt-28 md:pt-32">
     <!-- Top Bar Header (Desktop & Mobile with smooth scroll fade & lift transition) -->
     <div
       class="relative overflow-hidden border-b border-white/[0.08] mb-4 origin-top transition-all"
@@ -9,10 +9,10 @@
       <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_75%_55%_at_50%_-25%,rgba(229,9,20,0.15),transparent_58%)]" aria-hidden="true"></div>
       <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0a0a0c]" aria-hidden="true"></div>
 
-      <div class="relative px-4 md:px-8 pt-2 pb-6 lg:pb-8 max-w-[1920px] mx-auto">
-        <div class="flex flex-row gap-6 lg:gap-8 items-start lg:items-center">
+      <div class="relative px-4 md:px-8 pt-2 pb-5 lg:pb-8 max-w-[1920px] mx-auto">
+        <div class="flex flex-row gap-4 sm:gap-6 lg:gap-8 items-center">
           <!-- Square / Rounded Logo Card -->
-          <div class="relative h-[92px] w-[92px] lg:h-[116px] lg:w-[116px] shrink-0 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.03] p-3 lg:p-4 shadow-[0_12px_48px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.12] flex items-center justify-center">
+          <div class="relative h-16 w-16 sm:h-[92px] sm:w-[92px] lg:h-[116px] lg:w-[116px] shrink-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.03] p-2.5 sm:p-3 lg:p-4 shadow-[0_12px_48px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.12] flex items-center justify-center">
             <img
               :src="currentPlatform.local_logo_path"
               :alt="`${currentPlatform.provider_name} logo`"
@@ -22,14 +22,14 @@
           </div>
 
           <!-- Titles with Red Accent Vertical Line -->
-          <div class="min-w-0 flex-1 text-left border-l-2 border-[#E50914]/40 pl-5 lg:pl-6">
-            <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-bone-400 mb-1.5 lg:text-[11px]">
+          <div class="min-w-0 flex-1 text-left border-l-2 border-[#E50914]/40 pl-3.5 sm:pl-5 lg:pl-6">
+            <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#E50914] mb-1 lg:text-[11px]">
               {{ activeType === 'tv' ? 'SHOWS CATALOG' : 'MOVIE CATALOG' }}
             </p>
-            <h1 class="max-w-3xl text-3xl font-bold tracking-tight text-white lg:text-[2.125rem] lg:leading-[1.15] xl:text-4xl xl:leading-tight">
+            <h1 class="max-w-3xl text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white lg:text-[2.125rem] lg:leading-[1.15] xl:text-4xl xl:leading-tight truncate">
               {{ currentPlatform.provider_name }} — {{ activeType === 'tv' ? 'Shows' : 'Movies' }}
             </h1>
-            <p class="mt-2.5 max-w-xl text-sm leading-relaxed text-bone-400 lg:text-[0.9375rem]">
+            <p class="mt-1 max-w-xl text-xs sm:text-sm leading-relaxed text-bone-400 line-clamp-1 sm:line-clamp-none">
               {{ activeType === 'tv' ? 'Shows' : 'Movies' }} on MyFlix that list this provider in the catalog.
             </p>
           </div>
@@ -37,18 +37,18 @@
       </div>
     </div>
 
-    <div class="px-4 md:px-8 max-w-[1920px] mx-auto space-y-5">
+    <div class="px-4 md:px-8 max-w-[1920px] mx-auto space-y-4 md:space-y-5">
       <!-- Unified Filter Bar (Matches Redflix Pill Bar) -->
-      <div class="sticky top-[4.25rem] md:top-[4.5rem] z-30 -mx-4 md:mx-0 border-b border-white/[0.08] bg-[#0a0a0c]/98 px-4 py-2.5 backdrop-blur-2xl md:rounded-2xl md:border md:border-white/10 md:bg-[#111114]/98 md:px-4 md:py-3 md:shadow-2xl transition-all">
-        <div class="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-4">
-          <!-- Left Controls (Movies/TV toggle, Platform dropdown, Sort, Age) -->
-          <div class="flex items-center justify-between gap-2 md:justify-start md:gap-3 shrink-0 flex-wrap sm:flex-nowrap">
+      <div class="sticky top-[4.25rem] md:top-[4.5rem] z-30 -mx-4 md:mx-0 border-b border-white/[0.08] bg-[#0a0a0c]/98 px-3.5 py-2.5 backdrop-blur-2xl md:rounded-2xl md:border md:border-white/10 md:bg-[#111114]/98 md:px-4 md:py-3 md:shadow-2xl transition-all">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
+          <!-- Mobile Row 1: Movies/TV toggle + Platform Dropdown -->
+          <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
             <!-- Movies / TV Shows Toggle Pill -->
             <div class="flex rounded-lg md:rounded-xl bg-black/40 p-0.5 md:p-1 ring-1 ring-white/[0.08] shrink-0">
               <button
                 @click="switchType('movie')"
                 :class="[
-                  'rounded-md md:rounded-lg px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold transition-all cursor-pointer',
+                  'rounded-md md:rounded-lg px-3 py-1 md:px-5 md:py-2 text-xs md:text-sm font-semibold transition-all cursor-pointer',
                   activeType === 'movie' ? 'bg-white text-black shadow-md' : 'text-bone-400 hover:text-white'
                 ]"
               >
@@ -57,7 +57,7 @@
               <button
                 @click="switchType('tv')"
                 :class="[
-                  'rounded-md md:rounded-lg px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold transition-all cursor-pointer',
+                  'rounded-md md:rounded-lg px-3 py-1 md:px-5 md:py-2 text-xs md:text-sm font-semibold transition-all cursor-pointer',
                   activeType === 'tv' ? 'bg-white text-black shadow-md' : 'text-bone-400 hover:text-white'
                 ]"
               >
@@ -69,67 +69,67 @@
             <select
               :value="providerId"
               @change="onPlatformSelect($event.target.value)"
-              class="h-9 md:h-10 shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-3 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
+              class="h-8 md:h-10 flex-1 md:flex-none md:w-auto shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-2.5 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
             >
               <option v-for="p in platforms" :key="p.provider_id" :value="p.provider_id">
                 {{ p.provider_name }}
               </option>
             </select>
+          </div>
 
+          <!-- Mobile Row 2: Sort + Age + Search Input -->
+          <div class="flex items-center gap-2 w-full md:flex-1">
             <!-- Sort By Dropdown -->
-            <div class="flex items-center gap-1.5 shrink-0">
-              <span class="text-[11px] font-mono text-bone-400 uppercase font-semibold hidden lg:inline">Sort</span>
-              <select
-                v-model="selectedSort"
-                @change="onFilterChange"
-                class="h-9 md:h-10 shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-3 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
-              >
-                <option value="popularity.desc">Most popular</option>
-                <option value="vote_average.desc">Top rated</option>
-                <option value="primary_release_date.desc">Newest</option>
-                <option value="title.asc">Title A-Z</option>
-              </select>
-            </div>
+            <select
+              v-model="selectedSort"
+              @change="onFilterChange"
+              class="h-8 md:h-10 shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-2 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
+            >
+              <option value="popularity.desc">Most popular</option>
+              <option value="vote_average.desc">Top rated</option>
+              <option value="primary_release_date.desc">Newest</option>
+              <option value="title.asc">Title A-Z</option>
+            </select>
 
             <!-- All / Maturity Dropdown -->
             <select
               v-model="selectedMaturity"
               @change="onFilterChange"
-              class="h-9 md:h-10 shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-3 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
+              class="h-8 md:h-10 shrink-0 cursor-pointer rounded-lg md:rounded-xl border border-white/10 bg-surface-200 px-2 text-xs md:text-sm font-medium text-white outline-none hover:border-white/20 focus:border-[#E50914]"
             >
               <option value="all">All</option>
               <option value="safe">PG / Family</option>
               <option value="mature">TV-MA / R</option>
             </select>
-          </div>
 
-          <!-- Search on Platform Input -->
-          <div class="relative w-full md:min-w-0 md:flex-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-bone-400 md:left-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              v-model="searchQuery"
-              @input="onSearchInput"
-              type="search"
-              :placeholder="`Search on ${currentPlatform.provider_name}…`"
-              class="w-full bg-surface-200 text-white border border-white/10 rounded-full py-2 pl-10 pr-10 text-xs md:text-sm font-medium placeholder:text-bone-400 focus:outline-none focus:border-[#E50914] md:py-2.5 md:pl-12"
-            />
-            <button
-              v-if="searchQuery"
-              @click="clearSearch"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-bone-400 hover:text-white cursor-pointer text-lg leading-none"
-            >
-              &times;
-            </button>
+            <!-- Search on Platform Input -->
+            <div class="relative flex-1 min-w-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-bone-400 md:left-4 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                v-model="searchQuery"
+                @input="onSearchInput"
+                type="search"
+                :placeholder="`Search ${currentPlatform.provider_name}…`"
+                class="w-full h-8 md:h-10 bg-surface-200 text-white border border-white/10 rounded-lg md:rounded-full py-1 pl-8 pr-7 text-xs md:text-sm font-medium placeholder:text-bone-400 focus:outline-none focus:border-[#E50914] md:pl-10 md:pr-10"
+              />
+              <button
+                v-if="searchQuery"
+                @click="clearSearch"
+                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-bone-400 hover:text-white cursor-pointer text-sm leading-none"
+              >
+                &times;
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Genre Pills Row (Exact Redflix Style) -->
-      <div class="space-y-2">
+      <div class="space-y-1.5 md:space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-bone-400 font-mono">
+          <span class="text-[10px] md:text-[11px] font-semibold uppercase tracking-wider text-bone-400 font-mono">
             GENRE
           </span>
         </div>
@@ -137,14 +137,14 @@
         <div class="relative group/genres flex items-center">
           <div
             ref="genresScroller"
-            class="scrollbar-hide flex items-center gap-2 overflow-x-auto overflow-y-hidden py-1 touch-pan-x w-full"
+            class="scrollbar-hide flex items-center gap-1.5 md:gap-2 overflow-x-auto overflow-y-hidden py-1 touch-pan-x w-full"
           >
             <button
               v-for="genre in GENRES"
               :key="genre.name"
               @click="selectGenre(genre.id)"
               :class="[
-                'px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all shrink-0 cursor-pointer border',
+                'px-3 py-1 md:px-4 md:py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all shrink-0 cursor-pointer border',
                 selectedGenreId === genre.id
                   ? 'bg-[#E50914] text-white border-[#E50914] shadow-[0_0_12px_rgba(229,9,20,0.4)]'
                   : 'bg-surface-100 hover:bg-surface-200 text-bone-300 hover:text-white border-white/8 hover:border-white/20'

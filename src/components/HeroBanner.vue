@@ -42,14 +42,15 @@
           {{ item.overview }}
         </p>
 
-        <!-- CTAs -->
-        <div class="flex flex-wrap items-center gap-3 pt-2">
+        <!-- CTAs: Balanced 2x2 on Mobile, Flex on Desktop -->
+        <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 pt-2">
+          <!-- Watch Now (Play) -->
           <router-link
             :to="streamRoute"
-            class="group inline-flex items-center gap-2.5 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 text-white px-7 py-3 rounded-full font-bold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(229,9,20,0.5)] transform hover:-translate-y-0.5 active:scale-95"
+            class="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 text-white px-4 py-2.5 sm:px-7 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 shadow-[0_0_20px_rgba(229,9,20,0.5)] transform hover:-translate-y-0.5 active:scale-95"
           >
-            <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 fill-current ml-0.5 text-white" viewBox="0 0 20 20">
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-current ml-0.5 text-white" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
               </svg>
             </div>
@@ -60,7 +61,7 @@
           <button
             @click="openTrailer"
             :disabled="loadingTrailer"
-            class="inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50"
+            class="inline-flex items-center justify-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 cursor-pointer"
             title="Watch Trailer"
           >
             <svg v-if="!loadingTrailer" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,7 +75,7 @@
           <!-- My List Toggle Button -->
           <button
             @click="handleToggleList"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border transform hover:-translate-y-0.5 active:scale-95"
+            class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
             :class="isInList 
               ? 'bg-[#E50914] hover:bg-[#FF1E27] text-white border-[#E50914] shadow-[0_0_20px_rgba(229,9,20,0.4)]' 
               : 'bg-surface-100/90 hover:bg-surface-200 text-white border-white/10 hover:border-white/25'"
@@ -91,16 +92,17 @@
           <!-- Random Movie Suggestion Button Next to My List -->
           <button
             @click="openSuggestion"
-            class="inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-[#E50914]/50 transform hover:-translate-y-0.5 active:scale-95 group shadow-sm"
-            title="Random movie recommendation based on your watch history"
+            class="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-surface-100/90 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border border-white/10 hover:border-[#E50914]/50 transform hover:-translate-y-0.5 active:scale-95 group shadow-sm cursor-pointer"
+            title="Random suggestion based on your watch history"
           >
-            <span class="group-hover:rotate-180 transition-transform duration-500 text-base">🎲</span>
+            <span class="group-hover:rotate-180 transition-transform duration-500 text-sm sm:text-base">🎲</span>
             <span>Surprise Me</span>
           </button>
           
+          <!-- Overview for desktop -->
           <router-link
             :to="detailRoute"
-            class="inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95"
+            class="hidden sm:inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-bone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

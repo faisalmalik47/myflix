@@ -59,22 +59,12 @@
             <kbd class="font-mono text-[10px] bg-surface-200 border border-white/10 px-1.5 py-0.5 rounded text-bone-400 group-hover:text-white shrink-0">⌘K</kbd>
           </router-link>
 
-          <!-- Compact Search Icon for Mobile -->
-          <router-link
-            to="/search"
-            class="sm:hidden text-bone-300 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
-            title="Search"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </router-link>
-
           <!-- User / Auth Menu -->
           <div v-if="user" class="relative">
             <button 
               @click="userMenuOpen = !userMenuOpen"
-              class="flex items-center space-x-2 text-xs bg-surface-100 px-3 py-1.5 rounded-full text-white border border-white/10 hover:border-[#E50914]/50 transition-all shadow-sm"
+              class="flex items-center space-x-1.5 sm:space-x-2 text-xs bg-surface-100 p-1.5 sm:px-3 sm:py-1.5 rounded-full text-white border border-white/10 hover:border-[#E50914]/50 transition-all shadow-sm"
+              :title="user.user_metadata?.full_name || profile?.username || user.email"
             >
               <img 
                 v-if="user.user_metadata?.avatar_url" 
@@ -82,11 +72,13 @@
                 alt="Avatar" 
                 class="w-5 h-5 rounded-full object-cover ring-1 ring-white/20"
               />
-              <span v-else class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="max-w-[110px] truncate font-medium">
+              <div v-else class="w-5 h-5 rounded-full bg-gradient-to-tr from-[#E50914] to-amber-500 flex items-center justify-center font-bold text-[10px] text-white uppercase ring-1 ring-white/20">
+                {{ (profile?.username || user.email || 'U')[0] }}
+              </div>
+              <span class="max-w-[100px] truncate font-medium hidden sm:inline-block">
                 {{ user.user_metadata?.full_name || profile?.username || user.email?.split('@')[0] }}
               </span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-bone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-bone-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>

@@ -127,17 +127,17 @@
             <div class="absolute inset-0 bg-gradient-to-t from-[#0e0e12] via-[#0e0e12]/60 to-black/40"></div>
             
             <!-- Top Controls: Back to Vibe Selector + Taste Reason Badge -->
-            <div class="absolute top-4 left-4 right-16 flex items-center gap-2 z-10 flex-wrap">
+            <div class="absolute top-3 sm:top-4 left-3 sm:left-4 right-14 flex items-center gap-2 z-10">
               <button
                 @click="backToPrompt"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/80 hover:bg-[#E50914] text-white text-xs font-semibold backdrop-blur-md border border-white/15 transition-all shadow-md active:scale-95"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/80 hover:bg-[#E50914] text-white text-xs font-semibold backdrop-blur-md border border-white/15 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer"
                 title="Change format or vibe"
               >
                 <span>&larr;</span>
                 <span>Change Vibe</span>
               </button>
 
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-xs text-[#f5efe4] shadow-md truncate max-w-[calc(100%-110px)]">
+              <div class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs text-[#f5efe4] shadow-md truncate min-w-0">
                 <span class="text-[#E50914] text-sm shrink-0">✨</span>
                 <span class="font-medium truncate">{{ currentSuggestion.reason }}</span>
               </div>
@@ -183,12 +183,12 @@
                 {{ currentSuggestion.overview || 'No description available for this title.' }}
               </p>
 
-              <!-- Actions Row -->
-              <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Actions Row (Clean 2x2 grid on mobile, flex row on desktop) -->
+              <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5 pt-1">
                 <!-- Play Now Button -->
                 <button
                   @click="watchNow"
-                  class="flex items-center gap-2 bg-[#E50914] hover:bg-[#FF1E27] text-white px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] hover:scale-105 active:scale-95 cursor-pointer"
+                  class="flex items-center justify-center gap-2 bg-[#E50914] hover:bg-[#FF1E27] text-white px-4 py-2.5 rounded-full text-xs font-bold transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] hover:scale-105 active:scale-95 cursor-pointer w-full sm:w-auto"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 fill-current" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
@@ -200,7 +200,7 @@
                 <button
                   @click="openTrailer"
                   :disabled="loadingTrailer"
-                  class="flex items-center gap-1.5 bg-surface-100 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-4 py-2.5 rounded-full text-xs font-semibold transition-all border border-white/10 hover:border-white/25 active:scale-95 disabled:opacity-50 cursor-pointer"
+                  class="flex items-center justify-center gap-1.5 bg-surface-100 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-4 py-2.5 rounded-full text-xs font-semibold transition-all border border-white/10 hover:border-white/25 active:scale-95 disabled:opacity-50 cursor-pointer w-full sm:w-auto"
                   title="Watch Trailer"
                 >
                   <svg v-if="!loadingTrailer" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -214,7 +214,7 @@
                 <!-- Watchlist Button -->
                 <button
                   @click="toggleList"
-                  class="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-semibold transition-all border cursor-pointer"
+                  class="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-semibold transition-all border cursor-pointer w-full sm:w-auto"
                   :class="isInList 
                     ? 'bg-white/10 text-white border-white/20 hover:bg-white/15' 
                     : 'bg-surface-100 hover:bg-surface-200 text-bone-300 hover:text-white border-white/10'"
@@ -231,7 +231,7 @@
                 <!-- Roll Again -->
                 <button
                   @click="rollAgain"
-                  class="flex items-center gap-1.5 bg-surface-100 hover:bg-surface-200 text-bone-300 hover:text-white px-4 py-2.5 rounded-full text-xs font-semibold transition-all border border-white/10 hover:border-white/20 active:scale-95 group cursor-pointer"
+                  class="flex items-center justify-center gap-1.5 bg-surface-100 hover:bg-surface-200 text-bone-300 hover:text-white px-4 py-2.5 rounded-full text-xs font-semibold transition-all border border-white/10 hover:border-white/20 active:scale-95 group cursor-pointer w-full sm:w-auto"
                   title="Roll another suggestion in this vibe"
                 >
                   <span class="group-hover:rotate-180 transition-transform duration-300">🎲</span>
@@ -241,7 +241,7 @@
                 <!-- Screening Details -->
                 <button
                   @click="viewDetails"
-                  class="text-xs text-bone-400 hover:text-white px-3 py-2 transition-colors ml-auto underline-offset-4 hover:underline cursor-pointer"
+                  class="col-span-2 sm:col-span-1 text-center sm:text-left text-xs text-bone-400 hover:text-white py-2 transition-colors sm:ml-auto underline-offset-4 hover:underline cursor-pointer"
                 >
                   Screening Page &rarr;
                 </button>

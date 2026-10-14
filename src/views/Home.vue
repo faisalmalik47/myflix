@@ -29,12 +29,12 @@
             <input
               v-model="homeSearchQuery"
               type="text"
-              placeholder="Search over 100,000+ movies, TV shows, and anime..."
-              class="bg-transparent text-sm md:text-base text-white placeholder-bone-400 focus:outline-none w-full py-1.5 font-sans"
+              placeholder="Search movies, TV shows, anime..."
+              class="bg-transparent text-xs sm:text-sm md:text-base text-white placeholder-bone-400 focus:outline-none w-full py-1 font-sans"
             />
             <button
               type="submit"
-              class="px-6 py-2.5 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 active:scale-95 text-white font-bold text-xs md:text-sm rounded-full transition-all shadow-[0_0_15px_rgba(229,9,20,0.4)] shrink-0 cursor-pointer"
+              class="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 active:scale-95 text-white font-bold text-xs md:text-sm rounded-full transition-all shadow-[0_0_15px_rgba(229,9,20,0.4)] shrink-0 cursor-pointer"
             >
               Search
             </button>
