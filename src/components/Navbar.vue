@@ -10,7 +10,7 @@
     >
       <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
         <!-- Desktop Left: Logo & Links -->
-        <div class="flex items-center space-x-8">
+        <div class="hidden lg:flex items-center space-x-8">
           <!-- MYFLIX Brand Logo -->
           <router-link to="/" class="flex items-center gap-2 group">
             <span class="text-3xl md:text-4xl font-display font-black tracking-wider text-white group-hover:text-white/95 transition-colors">
@@ -19,7 +19,7 @@
           </router-link>
 
           <!-- Desktop Nav Links -->
-          <div class="hidden lg:flex items-center space-x-1">
+          <div class="flex items-center space-x-1">
             <router-link
               v-for="link in navLinks"
               :key="link.path"
@@ -42,13 +42,23 @@
           </div>
         </div>
 
-        <!-- Mobile Top Header (Exact Netflix iOS App: Logo + Title + Cast + Download + Bell) -->
+        <!-- Mobile Top Header (Exact Netflix iOS App: Ribbon Logo + Title + Cast + Download + Bell) -->
         <div class="lg:hidden flex items-center justify-between w-full">
-          <!-- Left: Red 'N' Brand Mark + Dynamic Title -->
-          <router-link to="/" class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded bg-[#E50914] flex items-center justify-center font-black text-white text-lg tracking-tighter shadow-[0_0_14px_rgba(229,9,20,0.6)]">
-              N
-            </div>
+          <!-- Left: Red Ribbon 'N' Brand Mark + Dynamic Title -->
+          <router-link to="/" class="flex items-center gap-2.5 group">
+            <svg viewBox="0 0 24 38" class="h-7 w-auto drop-shadow-[0_2px_12px_rgba(229,9,20,0.7)]" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 0H7.5V38H0V0Z" fill="#E50914"/>
+              <path d="M16.5 0H24V38H16.5V0Z" fill="#E50914"/>
+              <path d="M0 0H7.8L24 38H16.2L0 0Z" fill="#B81D24"/>
+              <path d="M0 0H7.8L24 38H16.2L0 0Z" fill="url(#netflix-ribbon-grad)" opacity="0.45"/>
+              <defs>
+                <linearGradient id="netflix-ribbon-grad" x1="0" y1="0" x2="24" y2="38" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#000000" stop-opacity="0.6"/>
+                  <stop offset="0.5" stop-color="#E50914" stop-opacity="0"/>
+                  <stop offset="1" stop-color="#000000" stop-opacity="0.7"/>
+                </linearGradient>
+              </defs>
+            </svg>
             <h1 class="text-xl font-bold font-display text-white tracking-tight">
               {{ currentMobileTitle }}
             </h1>
