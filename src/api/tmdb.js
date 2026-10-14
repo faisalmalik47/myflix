@@ -1,12 +1,19 @@
 import axios from 'axios'
+import { getEnv } from '@/utils/env.js'
 
-const TMDB_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN || ''
 const BASE = 'https://api.themoviedb.org/3'
 export const IMG = 'https://image.tmdb.org/t/p'
 
 const api = axios.create({
   baseURL: BASE,
-  headers: { Authorization: `Bearer ${TMDB_TOKEN}` },
+})
+
+api.interceptors.request.use((config) => {
+  const token = getEnv('VITE_TMDB_ACCESS_TOKEN')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
 })
 
 // Image URL helpers

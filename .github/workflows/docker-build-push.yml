@@ -18,7 +18,7 @@ jobs:
       - name: Compute Tag Variables
         id: vars
         run: |
-          echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "commit_id=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           DOCKER_USER="${{ secrets.DOCKERHUB_USERNAME }}"
           if [ -z "$DOCKER_USER" ]; then
             DOCKER_USER="faisalmaliik"
@@ -41,19 +41,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Docker Image (Secure - Zero Build Secrets)
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            ${{ steps.vars.outputs.image_name }}:${{ github.sha }}
-            ${{ steps.vars.outputs.image_name }}:${{ steps.vars.outputs.short_sha }}
-            ${{ steps.vars.outputs.image_name }}:latest
-          build-args: |
-            VITE_TMDB_ACCESS_TOKEN=${{ secrets.VITE_TMDB_ACCESS_TOKEN }}
-            VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
-            VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Exactly 1 image tag pushed: commit ID
+          tags: ${{ steps.vars.outputs.image_name }}:${{ steps.vars.outputs.commit_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
