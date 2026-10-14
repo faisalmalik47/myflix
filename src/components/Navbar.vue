@@ -158,12 +158,12 @@
       </transition>
     </nav>
 
-    <!-- Netflix iOS Floating Capsule Navigation Dock (Home, Clips, Search, My Netflix) -->
-    <div class="lg:hidden fixed bottom-3.5 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[340px] bg-[#141418]/92 backdrop-blur-2xl border border-white/12 rounded-full py-2 px-3 shadow-[0_16px_40px_rgba(0,0,0,0.9)] flex items-center justify-between">
+    <!-- Netflix iOS Floating Capsule Navigation Dock (Home, Surprise Me, Search, My Netflix) -->
+    <div class="lg:hidden fixed bottom-3.5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[360px] bg-[#141418]/92 backdrop-blur-2xl border border-white/12 rounded-full py-2 px-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.9)] flex items-center justify-between">
       <!-- 1. Home -->
       <router-link
         to="/"
-        class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-full transition-all text-[10px]"
+        class="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-full transition-all text-[10px]"
         :class="route.path === '/' ? 'bg-white/15 text-white font-bold' : 'text-bone-400 hover:text-white'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -172,23 +172,26 @@
         <span>Home</span>
       </router-link>
 
-      <!-- 2. Clips (Triggers Surprise Me Recommendation) -->
+      <!-- 2. Surprise Me (Triggers Recommendation) -->
       <button
         @click="openSuggestion"
-        class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-full transition-all text-[10px] text-bone-400 hover:text-white cursor-pointer active:scale-95"
+        class="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-full transition-all text-[10px] text-bone-400 hover:text-white cursor-pointer active:scale-95"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <rect x="3" y="5" width="14" height="15" rx="3" stroke-width="1.8"/>
-          <path d="M7 2.5h10a3 3 0 0 1 3 3V16" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M8.5 10l5 3-5 3v-6z" fill="currentColor"/>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="4" />
+          <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+          <circle cx="16" cy="8" r="1.2" fill="currentColor" />
+          <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+          <circle cx="8" cy="16" r="1.2" fill="currentColor" />
+          <circle cx="16" cy="16" r="1.2" fill="currentColor" />
         </svg>
-        <span>Clips</span>
+        <span class="whitespace-nowrap">Surprise Me</span>
       </button>
 
       <!-- 3. Search -->
       <router-link
         to="/search"
-        class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-full transition-all text-[10px]"
+        class="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-full transition-all text-[10px]"
         :class="route.path === '/search' ? 'bg-white/15 text-white font-bold' : 'text-bone-400 hover:text-white'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
