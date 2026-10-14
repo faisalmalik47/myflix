@@ -121,5 +121,27 @@ docker exec cinextma cat /usr/share/nginx/html/env-config.js
 
 ---
 
+## ⚡ Automated CI/CD Pipeline
+
+The GitHub Actions workflow (`.github/workflows/docker-build-push.yml`) automates both building and deployment on push to `main`:
+
+1. **Security Gate:** Only authorized repository owner/actor (`faisalmalik47` / `faisalmaliik`) can trigger the build and deploy jobs.
+2. **CI (Docker Hub):** Builds the production container and pushes a single image tagged with the commit SHA (`faisalmaliik/myflix:<commit_id>`).
+3. **CD (Tailscale SSH):** Authenticates to your private Tailscale network, connects via SSH to your home server (`cloud-server`), updates `docker-compose.yml` with the new tag, pulls the image, and restarts the container with zero downtime.
+
+### Required GitHub Secrets
+In your GitHub repo (**Settings > Secrets and variables > Actions**), configure:
+
+| Secret | Description | Default / Example |
+|---|---|---|
+| `DOCKERHUB_USERNAME` | Docker Hub username | `faisalmaliik` |
+| `DOCKERHUB_TOKEN` | Docker Hub personal access token | `dckr_pat_...` |
+| `TAILSCALE_AUTHKEY` | Tailscale reusable auth key | `tskey-auth-...` |
+| `SERVER_SSH_KEY` | Private SSH key for server user `phil` | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `SERVER_HOST` | Tailscale IP of your server *(optional)* | `100.98.17.74` |
+| `SERVER_USER` | Linux SSH username *(optional)* | `phil` |
+
+---
+
 ## 📜 License
 This project is open-source. All streams are embedded from non-affiliated third-party mirrors. MyFlix does not host any media files.

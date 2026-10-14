@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,7 +9,11 @@ on:
 jobs:
   docker:
     name: Build & Push to Docker Hub
+    # Security: Ensure only authorized repository owner/actor can trigger the build
+    if: github.actor == github.repository_owner || github.actor == 'faisalmalik47' || github.actor == 'faisalmaliik'
     runs-on: ubuntu-latest
+    outputs:
+      commit_id: ${{ steps.vars.outputs.commit_id }}
 
     steps:
       - name: Checkout Repository
@@ -51,3 +55,44 @@ jobs:
           tags: ${{ steps.vars.outputs.image_name }}:${{ steps.vars.outputs.commit_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to Home Server
+    needs: docker
+    # Security: Ensure only authorized repository owner/actor can execute deployment
+    if: github.actor == github.repository_owner || github.actor == 'faisalmalik47' || github.actor == 'faisalmaliik'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to Tailscale Network
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Deploy Container via SSH
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST || '100.98.17.74' }}
+          SERVER_USER: ${{ secrets.SERVER_USER || 'phil' }}
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          COMMIT_ID: ${{ needs.docker.outputs.commit_id }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_server
+          chmod 600 ~/.ssh/id_server
+
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_server "$SERVER_USER@$SERVER_HOST" << EOF
+            set -e
+            echo "🚀 Deploying MyFlix tag: $COMMIT_ID"
+            cd ~/server
+
+            # 1. Update image tag in docker-compose.yml
+            sed -i -E "s|(image:\s*.*myflix:).*|\1$COMMIT_ID|" docker-compose.yml
+
+            # 2. Pull the newly published image
+            docker compose pull cinextma
+
+            # 3. Recreate container with zero downtime
+            docker compose up -d cinextma
+
+            echo "✅ Successfully deployed MyFlix ($COMMIT_ID)!"
+          EOF
