@@ -1,7 +1,7 @@
 <template>
   <div 
     v-if="item" 
-    class="relative w-full overflow-hidden transition-all duration-300 mx-auto max-w-[94%] sm:max-w-none mt-24 mb-4 sm:my-0 rounded-[26px] sm:rounded-none border border-white/10 sm:border-0 shadow-[0_20px_50px_rgba(0,0,0,0.85)] sm:shadow-none h-[66vh] min-h-[480px] max-h-[600px] sm:h-[85vh] sm:min-h-[500px] sm:max-h-none bg-surface flex items-end sm:items-center"
+    class="relative w-full overflow-hidden transition-all duration-300 h-[72vh] min-h-[520px] sm:h-[85vh] sm:min-h-[500px] bg-surface flex items-end sm:items-center"
   >
     <!-- Background Image with Multi-layer Cinematic Vignette -->
     <div class="absolute inset-0 select-none pointer-events-none">
@@ -18,11 +18,11 @@
     </div>
 
     <!-- Content -->
-    <div class="container mx-auto px-4 md:px-8 relative z-10 pb-6 sm:pb-0 sm:pt-20 w-full">
-      <div class="max-w-2xl text-center sm:text-left space-y-3 sm:space-y-4 mx-auto sm:mx-0">
+    <div class="container mx-auto px-4 md:px-8 relative z-10 pb-8 sm:pb-0 sm:pt-20 w-full">
+      <div class="max-w-2xl text-left space-y-2.5 sm:space-y-4 mx-0">
         
-        <!-- Metadata Pill Badges (Desktop) -->
-        <div class="hidden sm:inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-surface-100/90 backdrop-blur-md border border-white/10 text-xs">
+        <!-- Metadata Pill Badges (Visible on mobile & desktop matching reference) -->
+        <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-surface-100/90 backdrop-blur-md border border-white/10 text-xs">
           <span class="flex items-center text-[#E50914] font-bold font-mono">
             ★ {{ (item.vote_average || 0).toFixed(1) }}
           </span>
@@ -37,21 +37,12 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-3xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-wide uppercase leading-tight drop-shadow-2xl px-2 sm:px-0">
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-wide uppercase leading-tight drop-shadow-2xl">
           {{ item.title || item.name }}
         </h1>
-
-        <!-- Mobile Tagline (Like 'New episode coming on Wednesday') -->
-        <p class="sm:hidden text-xs text-bone-300 font-medium drop-shadow flex items-center justify-center gap-2">
-          <span class="text-[#E50914] font-bold">★ {{ (item.vote_average || 0).toFixed(1) }}</span>
-          <span>&bull;</span>
-          <span>Trending #1 Today</span>
-          <span>&bull;</span>
-          <span>{{ (item.media_type || defaultMediaType) === 'tv' ? 'TV Series' : 'Movie' }}</span>
-        </p>
         
-        <!-- Overview (Desktop) -->
-        <p class="hidden sm:block text-bone-300 text-sm md:text-base line-clamp-3 leading-relaxed drop-shadow max-w-xl font-normal">
+        <!-- Overview -->
+        <p class="text-bone-300 text-xs sm:text-sm md:text-base line-clamp-2 sm:line-clamp-3 leading-relaxed drop-shadow max-w-xl font-normal">
           {{ item.overview }}
         </p>
 

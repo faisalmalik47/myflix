@@ -9,17 +9,16 @@
       ]"
     >
       <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
-        <!-- Desktop Left: Logo & Links -->
-        <div class="hidden lg:flex items-center space-x-8">
-          <!-- MYFLIX Brand Logo -->
+        <!-- Left: MYFLIX Logo (both mobile & desktop, matching user screenshot) -->
+        <div class="flex items-center space-x-8">
           <router-link to="/" class="flex items-center gap-2 group">
-            <span class="text-3xl md:text-4xl font-display font-black tracking-wider text-white group-hover:text-white/95 transition-colors">
+            <span class="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-wider text-white group-hover:text-white/95 transition-colors">
               MY<span class="text-[#E50914] group-hover:text-[#FF1E27] drop-shadow-[0_0_18px_rgba(229,9,20,0.6)]">FLIX</span>
             </span>
           </router-link>
 
           <!-- Desktop Nav Links -->
-          <div class="flex items-center space-x-1">
+          <div class="hidden lg:flex items-center space-x-1">
             <router-link
               v-for="link in navLinks"
               :key="link.path"
@@ -42,74 +41,12 @@
           </div>
         </div>
 
-        <!-- Mobile Top Header (Exact Netflix iOS App: Ribbon Logo + Title + Cast + Download + Bell) -->
-        <div class="lg:hidden flex items-center justify-between w-full">
-          <!-- Left: Red Ribbon 'N' Brand Mark + Dynamic Title -->
-          <router-link to="/" class="flex items-center gap-2.5 group">
-            <svg viewBox="0 0 24 38" class="h-7 w-auto drop-shadow-[0_2px_12px_rgba(229,9,20,0.7)]" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0H7.5V38H0V0Z" fill="#E50914"/>
-              <path d="M16.5 0H24V38H16.5V0Z" fill="#E50914"/>
-              <path d="M0 0H7.8L24 38H16.2L0 0Z" fill="#B81D24"/>
-              <path d="M0 0H7.8L24 38H16.2L0 0Z" fill="url(#netflix-ribbon-grad)" opacity="0.45"/>
-              <defs>
-                <linearGradient id="netflix-ribbon-grad" x1="0" y1="0" x2="24" y2="38" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#000000" stop-opacity="0.6"/>
-                  <stop offset="0.5" stop-color="#E50914" stop-opacity="0"/>
-                  <stop offset="1" stop-color="#000000" stop-opacity="0.7"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <h1 class="text-xl font-bold font-display text-white tracking-tight">
-              {{ currentMobileTitle }}
-            </h1>
-          </router-link>
-
-          <!-- Right: Cast, Download, Bell with Badge -->
-          <div class="flex items-center gap-4 text-white">
-            <!-- Cast / AirPlay Icon -->
-            <button
-              @click="showFeatureToast('Screen Cast ready — connect to your TV')"
-              class="text-white/90 hover:text-white active:scale-90 transition-transform cursor-pointer"
-              title="Screen Cast"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6M2 20h.01" />
-              </svg>
-            </button>
-
-            <!-- Download Icon -->
-            <router-link
-              to="/watchlist"
-              class="text-white/90 hover:text-white active:scale-90 transition-transform"
-              title="Downloads & Saved"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-            </router-link>
-
-            <!-- Notifications Bell with Red Counter (5) -->
-            <button
-              @click="showFeatureToast('5 new episodes and movies added today!')"
-              class="relative text-white/90 hover:text-white active:scale-90 transition-transform cursor-pointer"
-              title="Notifications"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span class="absolute -top-1 -right-1.5 bg-[#E50914] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md">
-                5
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Desktop Right: Search & User Menu -->
-        <div class="hidden lg:flex items-center space-x-3">
+        <!-- Right Side: Search (desktop), User Pill, Hamburger Menu -->
+        <div class="flex items-center space-x-2.5 sm:space-x-3">
           <!-- Desktop Search Pill -->
           <router-link
             to="/search"
-            class="flex items-center gap-2.5 bg-surface-100/90 hover:bg-surface-200 text-bone-400 hover:text-white px-3.5 py-1.5 rounded-full border border-white/10 hover:border-[#E50914]/60 transition-all text-xs shadow-sm font-sans w-48 md:w-60 justify-between group"
+            class="hidden sm:flex items-center gap-2.5 bg-surface-100/90 hover:bg-surface-200 text-bone-400 hover:text-white px-3.5 py-1.5 rounded-full border border-white/10 hover:border-[#E50914]/60 transition-all text-xs shadow-sm font-sans w-48 md:w-60 justify-between group"
             title="Search movies, shows & anime (⌘K)"
           >
             <div class="flex items-center gap-2 truncate">
@@ -121,11 +58,11 @@
             <kbd class="font-mono text-[10px] bg-surface-200 border border-white/10 px-1.5 py-0.5 rounded text-bone-400 group-hover:text-white shrink-0">⌘K</kbd>
           </router-link>
 
-          <!-- User / Auth Menu -->
+          <!-- User Pill: [ (f) v ] (Screenshot: media_1792013008307_9691e574.png) -->
           <div v-if="user" class="relative">
             <button 
               @click="userMenuOpen = !userMenuOpen"
-              class="flex items-center space-x-1.5 sm:space-x-2 text-xs bg-surface-100 p-1.5 sm:px-3 sm:py-1.5 rounded-full text-white border border-white/10 hover:border-[#E50914]/50 transition-all shadow-sm cursor-pointer"
+              class="flex items-center space-x-1 sm:space-x-2 text-xs bg-[#18181d]/85 hover:bg-[#25252b] px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white border border-white/10 hover:border-[#E50914]/50 transition-all shadow-sm cursor-pointer"
               :title="user.user_metadata?.full_name || profile?.username || user.email"
             >
               <img 
@@ -134,8 +71,8 @@
                 alt="Avatar" 
                 class="w-5 h-5 rounded-full object-cover ring-1 ring-white/20"
               />
-              <div v-else class="w-5 h-5 rounded-full bg-gradient-to-tr from-[#E50914] to-amber-500 flex items-center justify-center font-bold text-[10px] text-white uppercase ring-1 ring-white/20">
-                {{ (profile?.username || user.email || 'U')[0] }}
+              <div v-else class="w-5 h-5 rounded-full bg-[#387c3e] flex items-center justify-center font-bold text-[10px] text-white uppercase ring-1 ring-white/20">
+                {{ (profile?.username || user.email || 'F')[0].toLowerCase() }}
               </div>
               <span class="max-w-[100px] truncate font-medium hidden sm:inline-block">
                 {{ user.user_metadata?.full_name || profile?.username || user.email?.split('@')[0] }}
@@ -145,7 +82,7 @@
               </svg>
             </button>
 
-            <!-- Dropdown -->
+            <!-- Dropdown Menu -->
             <transition name="fade">
               <div 
                 v-if="userMenuOpen" 
@@ -177,49 +114,48 @@
           <router-link
             v-else
             to="/login"
-            class="text-xs bg-[#E50914] hover:bg-[#FF1E27] text-white px-4 py-1.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(229,9,20,0.3)] hover:shadow-[0_0_20px_rgba(229,9,20,0.5)]"
+            class="text-xs bg-[#E50914] hover:bg-[#FF1E27] text-white px-3.5 sm:px-4 py-1.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(229,9,20,0.3)] hover:shadow-[0_0_20px_rgba(229,9,20,0.5)]"
           >
             Sign In
           </router-link>
+
+          <!-- Mobile Hamburger Menu Button: ≡ (Screenshot: media_1792013008307_9691e574.png) -->
+          <button @click="toggleMenu" class="lg:hidden text-bone-300 hover:text-white p-1 rounded-lg focus:outline-none cursor-pointer">
+            <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <!-- Mobile Pill Filters Row (Shows, Movies, New & Hot, Categories) -->
-      <div v-if="showMobileFilterPills" class="lg:hidden px-4 pt-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-        <router-link
-          to="/tv"
-          class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border"
-          :class="route.path === '/tv' ? 'bg-white text-black font-bold border-white' : 'bg-surface-200/60 border-white/15 text-white/90 hover:text-white'"
-        >
-          Shows
-        </router-link>
+      <!-- Mobile Dropdown Drawer Menu -->
+      <transition name="fade">
+        <div v-if="isMenuOpen" class="lg:hidden bg-surface-100/98 backdrop-blur-2xl border-t border-white/10 mt-3 mx-4 rounded-2xl overflow-hidden shadow-2xl">
+          <div class="flex flex-col py-2">
+            <router-link
+              v-for="link in navLinks"
+              :key="link.path"
+              :to="link.path"
+              class="px-5 py-3 text-bone-300 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium"
+              active-class="bg-[#E50914]/20 text-[#E50914] font-bold"
+              @click="isMenuOpen = false"
+            >
+              {{ link.name }}
+            </router-link>
 
-        <router-link
-          to="/movies"
-          class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border"
-          :class="route.path === '/movies' ? 'bg-white text-black font-bold border-white' : 'bg-surface-200/60 border-white/15 text-white/90 hover:text-white'"
-        >
-          Movies
-        </router-link>
-
-        <button
-          @click="openSuggestion"
-          class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border bg-surface-200/60 border-white/15 text-white/90 hover:text-white cursor-pointer active:scale-95"
-        >
-          New & Hot
-        </button>
-
-        <router-link
-          to="/anime"
-          class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-1.5"
-          :class="route.path === '/anime' ? 'bg-white text-black font-bold border-white' : 'bg-surface-200/60 border-white/15 text-white/90 hover:text-white'"
-        >
-          <span>Categories</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </router-link>
-      </div>
+            <button
+              @click="isMenuOpen = false; openSuggestion()"
+              class="flex items-center gap-2.5 px-5 py-3 text-[#E50914] hover:bg-white/10 transition-colors text-sm font-bold border-t border-white/5 text-left cursor-pointer"
+            >
+              <span>🎲</span>
+              <span>Surprise Me (Random Movie)</span>
+            </button>
+          </div>
+        </div>
+      </transition>
     </nav>
 
     <!-- Netflix iOS Floating Capsule Navigation Dock (Home, Clips, Search, My Netflix) -->
