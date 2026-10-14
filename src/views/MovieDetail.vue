@@ -74,20 +74,30 @@
               </router-link>
               
               <button 
-                @click="toggleWatchlist(movie, 'movie')"
-                class="flex items-center gap-2 bg-surface-100 hover:bg-surface-200 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200"
+                @click="handleToggleWatchlist"
+                class="flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-200 border"
+                :class="inWatchlist 
+                  ? 'bg-[#E50914] hover:bg-[#FF1E27] text-white border-[#E50914] shadow-[0_0_20px_rgba(229,9,20,0.4)]' 
+                  : 'bg-surface-100 hover:bg-surface-200 text-white border-white/10 hover:border-white/20'"
               >
-                <svg v-if="isInWatchlist(movie.id)" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                {{ isInWatchlist(movie.id) ? 'In Watchlist' : 'Add to Watchlist' }}
+                <svg v-if="inWatchlist" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                {{ inWatchlist ? 'In My List' : 'Add to My List' }}
               </button>
               
               <button 
                 v-if="trailerKey"
                 @click="showTrailer = true"
-                class="flex items-center gap-2 bg-surface-100 hover:bg-surface-200 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200"
+                class="flex items-center gap-2 bg-surface-100 hover:bg-surface-200 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200 border border-white/10 hover:border-white/25"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 Trailer
               </button>
             </div>
@@ -117,6 +127,7 @@
     <TrailerModal 
       v-if="showTrailer" 
       :trailerKey="trailerKey" 
+      :show="showTrailer"
       @close="showTrailer = false" 
     />
   </div>
@@ -138,13 +149,34 @@ const movie = ref(null)
 const loading = ref(true)
 const showTrailer = ref(false)
 
+const inWatchlist = computed(() => {
+  if (!movie.value) return false
+  return isInWatchlist(movie.value.id)
+})
+
+const handleToggleWatchlist = () => {
+  if (movie.value) {
+    toggleWatchlist(movie.value, 'movie')
+  }
+}
+
 const cast = computed(() => {
   return movie.value?.credits?.cast?.slice(0, 15) || []
 })
 
 const trailerKey = computed(() => {
-  const trailer = movie.value?.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube')
-  return trailer ? trailer.key : null
+  const videos = movie.value?.videos?.results || []
+  if (!videos.length) return null
+  const yt = videos.filter(v => v.site?.toLowerCase() === 'youtube' && v.key)
+  const officialTrailer = yt.find(v => v.type?.toLowerCase() === 'trailer' && v.official)
+  if (officialTrailer) return officialTrailer.key
+  const anyTrailer = yt.find(v => v.type?.toLowerCase() === 'trailer')
+  if (anyTrailer) return anyTrailer.key
+  const teaser = yt.find(v => v.type?.toLowerCase() === 'teaser')
+  if (teaser) return teaser.key
+  const clip = yt.find(v => v.type?.toLowerCase() === 'clip')
+  if (clip) return clip.key
+  return yt[0]?.key || null
 })
 
 const fetchMovie = async (id) => {
