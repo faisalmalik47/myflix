@@ -1,14 +1,21 @@
 <template>
-  <div class="px-4 md:px-8 pt-20 pb-16 min-h-screen">
+  <div class="px-4 md:px-8 pt-4 pb-16 min-h-screen">
     <!-- Back Navigation Bar -->
     <div class="max-w-6xl mx-auto mb-4 flex items-center justify-between">
-      <button 
-        @click="$router.back()"
-        class="inline-flex items-center gap-2 text-xs font-semibold text-bone-300 hover:text-white px-3 py-1.5 rounded-lg bg-surface-100 hover:bg-surface-200 border border-white/10 transition-colors"
-      >
-        <span>&larr;</span>
-        <span>Back</span>
-      </button>
+      <div class="flex items-center gap-3">
+        <router-link to="/" class="flex items-center gap-1 group shrink-0" title="Back to Home">
+          <span class="text-xl sm:text-2xl font-display font-black tracking-wider text-white">
+            MY<span class="text-[#E50914]">FLIX</span>
+          </span>
+        </router-link>
+        <button 
+          @click="$router.back()"
+          class="inline-flex items-center gap-2 text-xs font-semibold text-bone-300 hover:text-white px-3 py-1.5 rounded-lg bg-surface-100 hover:bg-surface-200 border border-white/10 transition-colors"
+        >
+          <span>&larr;</span>
+          <span>Back</span>
+        </button>
+      </div>
 
       <div class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-[#E50914] animate-pulse"></span>

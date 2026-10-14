@@ -9,10 +9,18 @@
     ></div>
 
     <!-- Watch Stage Sticky Chrome Header -->
-    <header class="sticky top-0 z-40 bg-gradient-to-b from-[#0b0a08]/95 via-[#0b0a08]/80 to-transparent backdrop-blur-md border-b border-[#f5efe4]/5">
+    <header class="sticky top-0 z-40 bg-[#0b0a08]/95 backdrop-blur-md border-b border-[#f5efe4]/10 shadow-lg">
       <div class="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-        <!-- Left: Back Button & Breadcrumbs -->
-        <div class="flex items-center gap-3 min-w-0">
+        <!-- Left: Brand Logo, Back Button & Breadcrumbs/Title -->
+        <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+          <router-link to="/" class="flex items-center gap-1 group shrink-0" title="Back to Home">
+            <span class="text-xl sm:text-2xl font-display font-black tracking-wider text-white">
+              MY<span class="text-[#E50914]">FLIX</span>
+            </span>
+          </router-link>
+
+          <span class="text-white/20 hidden sm:inline">&bull;</span>
+
           <router-link
             v-if="tv"
             :to="{ name: 'TvDetail', params: { id: tv.id } }"
@@ -26,9 +34,9 @@
 
           <div class="min-w-0">
             <div class="flex items-center gap-2 text-xs text-[#8a8270]">
-              <router-link to="/" class="hover:text-[#f5efe4] transition-colors">MyFlix</router-link>
+              <router-link to="/" class="hover:text-[#f5efe4] transition-colors">Home</router-link>
               <span>/</span>
-              <router-link to="/tv-shows" class="hover:text-[#f5efe4] transition-colors">TV Shows</router-link>
+              <router-link to="/tv" class="hover:text-[#f5efe4] transition-colors">TV Shows</router-link>
             </div>
             <h1 v-if="tv" class="font-display font-medium text-base sm:text-lg text-[#f5efe4] truncate leading-tight">
               {{ tv.name }}
