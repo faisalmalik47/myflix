@@ -73,12 +73,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY || secrets.SSH_PRIVATE_KEY || secrets.SSH_KEY }}
           COMMIT_ID: ${{ needs.docker.outputs.commit_id }}
         run: |
-          if [ -z "$SSH_PRIVATE_KEY" ]; then
-            echo "❌ ERROR: SSH private key secret is missing or empty!"
-            echo "Please configure 'SERVER_SSH_KEY' (or 'SSH_PRIVATE_KEY') in your GitHub Repo: Settings > Secrets and variables > Actions."
-            exit 1
-          fi
-
           mkdir -p ~/.ssh
           printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_server
           chmod 600 ~/.ssh/id_server
