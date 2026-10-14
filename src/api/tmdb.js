@@ -41,6 +41,12 @@ export const discoverMovies = (params = {}) =>
 export const getMovie = (id) =>
   api.get(`/movie/${id}`, { params: { append_to_response: 'credits,videos,similar,recommendations' } }).then(r => r.data)
 
+export const getMovieRecommendations = (id, page = 1) =>
+  api.get(`/movie/${id}/recommendations`, { params: { page } }).then(r => r.data)
+
+export const getMovieSimilar = (id, page = 1) =>
+  api.get(`/movie/${id}/similar`, { params: { page } }).then(r => r.data)
+
 // TV Shows
 export const getPopularTv = (page = 1) =>
   api.get('/tv/popular', { params: { page } }).then(r => r.data)

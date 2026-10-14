@@ -87,6 +87,16 @@
             </svg>
             <span>{{ isInList ? 'In List' : 'My List' }}</span>
           </button>
+
+          <!-- Random Movie Suggestion Button Next to My List -->
+          <button
+            @click="openSuggestion"
+            class="inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-[#E50914]/50 transform hover:-translate-y-0.5 active:scale-95 group shadow-sm"
+            title="Random movie recommendation based on your watch history"
+          >
+            <span class="group-hover:rotate-180 transition-transform duration-500 text-base">🎲</span>
+            <span>Surprise Me</span>
+          </button>
           
           <router-link
             :to="detailRoute"
@@ -117,6 +127,7 @@
 import { ref, computed } from 'vue'
 import { backdrop, getMovie, getTvShow } from '@/api/tmdb.js'
 import { useWatchlist } from '@/composables/useWatchlist.js'
+import { useRecommendation } from '@/composables/useRecommendation.js'
 import TrailerModal from '@/components/TrailerModal.vue'
 
 const props = defineProps({
@@ -127,6 +138,7 @@ const props = defineProps({
 })
 
 const { isInWatchlist, toggleWatchlist } = useWatchlist()
+const { openSuggestion } = useRecommendation()
 
 const showTrailer = ref(false)
 const trailerKey = ref('')

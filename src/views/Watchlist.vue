@@ -6,6 +6,15 @@
         <span class="px-2.5 py-0.5 rounded-full bg-[#E50914]/20 border border-[#E50914]/30 text-[#E50914] text-xs font-mono font-bold">
           {{ filteredList.length }}
         </span>
+
+        <button
+          @click="openSuggestion"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#f5efe4] hover:text-white bg-white/5 hover:bg-[#E50914]/20 border border-white/10 hover:border-[#E50914]/50 transition-all duration-200 group ml-2 shadow-sm"
+          title="Get a random movie recommendation based on your watch history"
+        >
+          <span class="group-hover:rotate-180 transition-transform duration-500">🎲</span>
+          <span>Surprise Me</span>
+        </button>
       </div>
 
       <!-- Filter tabs -->
@@ -71,8 +80,10 @@
 import { ref, computed } from 'vue'
 import PosterCard from '@/components/PosterCard.vue'
 import { useWatchlist } from '@/composables/useWatchlist.js'
+import { useRecommendation } from '@/composables/useRecommendation.js'
 
 const { items, removeFromWatchlist } = useWatchlist()
+const { openSuggestion } = useRecommendation()
 
 const activeTab = ref('all')
 

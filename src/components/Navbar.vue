@@ -29,6 +29,16 @@
             >
               {{ link.name }}
             </router-link>
+
+            <!-- Random Movie Suggestion Button Next to My List -->
+            <button
+              @click="openSuggestion"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#f5efe4] hover:text-white bg-white/5 hover:bg-[#E50914]/20 border border-white/10 hover:border-[#E50914]/50 transition-all duration-200 group ml-1 shadow-sm"
+              title="Get a random movie recommendation tailored to what you watch"
+            >
+              <span class="group-hover:rotate-180 transition-transform duration-500 text-sm">🎲</span>
+              <span>Surprise Me</span>
+            </button>
           </div>
         </div>
 
@@ -144,13 +154,22 @@
             >
               {{ link.name }}
             </router-link>
+
+            <!-- Mobile Drawer Surprise Me -->
+            <button
+              @click="isMenuOpen = false; openSuggestion()"
+              class="flex items-center gap-2.5 px-5 py-3 text-[#E50914] hover:bg-white/10 transition-colors text-sm font-bold border-t border-white/5 text-left"
+            >
+              <span>🎲</span>
+              <span>Surprise Me (Random Movie)</span>
+            </button>
           </div>
         </div>
       </transition>
     </nav>
 
     <!-- Mobile Bottom Navigation Bar (Redflix App Bar) -->
-    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0c]/95 backdrop-blur-xl border-t border-white/10 px-6 py-2.5 flex items-center justify-around shadow-2xl">
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0c]/95 backdrop-blur-xl border-t border-white/10 px-4 py-2.5 flex items-center justify-around shadow-2xl">
       <router-link
         to="/"
         class="flex flex-col items-center gap-1 text-[11px] text-bone-400 hover:text-white transition-colors"
@@ -192,6 +211,16 @@
         </svg>
         <span>My List</span>
       </router-link>
+
+      <!-- Surprise Me Tab next to My List in Mobile Bar -->
+      <button
+        @click="openSuggestion"
+        class="flex flex-col items-center gap-1 text-[11px] text-bone-400 hover:text-white transition-colors"
+        title="Surprise Me with a Movie"
+      >
+        <span class="text-base leading-none">🎲</span>
+        <span>Surprise</span>
+      </button>
     </div>
   </header>
 </template>
@@ -200,6 +229,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth.js'
+import { useRecommendation } from '@/composables/useRecommendation.js'
 
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
@@ -207,6 +237,7 @@ const userMenuOpen = ref(false)
 const router = useRouter()
 const route = useRoute()
 const { user, profile, signOut } = useAuth()
+const { openSuggestion } = useRecommendation()
 
 const isPlatformPage = computed(() => route.path.startsWith('/platforms'))
 
