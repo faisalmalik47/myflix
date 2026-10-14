@@ -17,8 +17,8 @@
       <!-- 1. Hero Spotlight Banner -->
       <HeroBanner v-if="heroItem" :item="heroItem" />
       
-      <!-- 2. Prominent Redflix Search Bar Widget -->
-      <div class="max-w-3xl mx-auto -mt-16 md:-mt-20 mb-8 relative z-20 px-4">
+      <!-- 2. Prominent Redflix Search Bar Widget (Desktop only, mobile uses floating bottom dock search) -->
+      <div class="hidden md:block max-w-3xl mx-auto -mt-16 md:-mt-20 mb-8 relative z-20 px-4">
         <form @submit.prevent="handleHomeSearch" class="relative group">
           <div class="relative flex items-center bg-[#111114]/95 backdrop-blur-xl border border-white/10 focus-within:border-[#E50914] focus-within:shadow-[0_0_35px_rgba(229,9,20,0.4)] rounded-full p-2 transition-all duration-300 shadow-2xl">
             <div class="pl-4 pr-3 text-[#E50914]">
@@ -55,12 +55,20 @@
         </div>
       </div>
       
-      <!-- Content Rails -->
-      <div class="px-4 md:px-8 space-y-10 relative z-10 pb-8">
+      <!-- Content Rails (Styled precisely as Netflix iOS App) -->
+      <div class="px-4 md:px-8 space-y-7 md:space-y-10 relative z-10 pb-8">
         <!-- 3. Redflix Studios & Platforms -->
         <StudiosRail />
 
-        <!-- 4. Top 10 Movies Today (Ranked with giant numbers) -->
+        <!-- Continue Watching for <User> (Screenshot 1) -->
+        <ContentRail 
+          v-if="progressItems.length > 0"
+          :title="`Continue Watching for ${userDisplayName}`" 
+          :items="progressItems" 
+          :is-progress="true"
+        />
+
+        <!-- Top 10 Movies Today (Ranked with giant numbers) -->
         <Top10Rail 
           v-if="top10Movies.length > 0"
           title="Top 10 Movies Today" 
@@ -68,7 +76,39 @@
           mediaType="movie"
         />
 
-        <!-- 5. Top 10 TV Shows Today -->
+        <!-- Only on MyFlix (Screenshot 2) -->
+        <ContentRail 
+          v-if="popularTv.length > 0"
+          title="Only on MyFlix" 
+          :items="popularTv" 
+          mediaType="tv"
+        />
+
+        <!-- My List (Screenshot 2: 'My List   See All >') -->
+        <ContentRail 
+          v-if="watchlistItems.length > 0"
+          title="My List" 
+          :items="watchlistItems" 
+          seeAllLink="/watchlist"
+        />
+
+        <!-- Today's Top Picks for You (Screenshot 2 & 3) -->
+        <ContentRail 
+          v-if="popularMovies.length > 0"
+          title="Today's Top Picks for You" 
+          :items="popularMovies" 
+          mediaType="movie"
+        />
+
+        <!-- Japanese Anime Series (Screenshot 3) -->
+        <ContentRail 
+          v-if="trendingAnime.length > 0"
+          title="Japanese Anime Series" 
+          :items="trendingAnime" 
+          seeAllLink="/anime"
+        />
+        
+        <!-- Top 10 TV Shows Today -->
         <Top10Rail 
           v-if="top10Tv.length > 0"
           title="Top 10 TV Shows Today" 
@@ -76,46 +116,17 @@
           mediaType="tv"
         />
 
-        <!-- Continue Watching (If any progress) -->
-        <ContentRail 
-          v-if="progressItems.length > 0"
-          title="Continue Watching" 
-          :items="progressItems" 
-          :is-progress="true"
-        />
-
-        <!-- Trending Anime Section -->
-        <ContentRail 
-          v-if="trendingAnime.length > 0"
-          title="Trending Anime" 
-          :items="trendingAnime" 
-        />
-        
-        <!-- Trending Worldwide -->
+        <!-- New on MyFlix (Screenshot 3) -->
         <ContentRail 
           v-if="trending.length > 0"
-          title="Trending Now" 
+          title="New on MyFlix" 
           :items="trending" 
         />
         
-        <!-- Popular Movies -->
-        <ContentRail 
-          v-if="popularMovies.length > 0"
-          title="Popular Movies" 
-          :items="popularMovies" 
-        />
-        
-        <!-- Popular TV Shows -->
-        <ContentRail 
-          v-if="popularTv.length > 0"
-          title="Popular TV Shows" 
-          :items="popularTv" 
-        />
-        
-        <!-- Top Rated Movies -->
+        <!-- Top Rated Hits -->
         <ContentRail 
           v-if="topRatedMovies.length > 0"
-          title="Top Rated Movies" 
+          title="Top Rated Masterpieces" 
           :items="topRatedMovies" 
         />
       </div>
@@ -141,9 +152,22 @@ import {
   getTrendingAnime
 } from '@/api/tmdb.js'
 import { useProgress } from '@/composables/useProgress.js'
+import { useAuth } from '@/composables/useAuth.js'
+import { useWatchlist } from '@/composables/useWatchlist.js'
 
 const router = useRouter()
 const homeSearchQuery = ref('')
+
+const { user, profile } = useAuth()
+const { watchlist } = useWatchlist()
+
+const userDisplayName = computed(() => {
+  const name = user.value?.user_metadata?.full_name || profile.value?.username || user.value?.email?.split('@')[0]
+  if (!name) return 'You'
+  return name.charAt(0).toUpperCase() + name.slice(1)
+})
+
+const watchlistItems = computed(() => watchlist.value || [])
 
 const handleHomeSearch = () => {
   if (homeSearchQuery.value.trim()) {

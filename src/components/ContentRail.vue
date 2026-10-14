@@ -1,13 +1,25 @@
 <template>
   <div class="content-rail my-8 md:my-10">
     <div class="flex items-center justify-between mb-3 px-0">
-      <h2 class="text-[17px] font-semibold leading-tight tracking-[-0.02em] text-white md:text-[18px] lg:text-[19px] flex items-center gap-2">
+      <h2 class="text-[17px] font-bold leading-tight tracking-[-0.02em] text-white md:text-[18px] lg:text-[19px] flex items-center gap-2">
         <span class="w-1.5 h-4 rounded-full bg-[#E50914] inline-block"></span>
         {{ title }}
       </h2>
 
-      <!-- Navigation Indicators / Counter if desired -->
-      <div v-if="totalPages > 1" class="hidden md:flex items-center gap-[3px]">
+      <!-- See All > Link (Screenshot 2: 'My List  See All >') -->
+      <router-link
+        v-if="seeAllLink"
+        :to="seeAllLink"
+        class="text-xs font-semibold text-bone-300 hover:text-white flex items-center gap-1 transition-colors group cursor-pointer"
+      >
+        <span>See All</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-bone-400 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        </svg>
+      </router-link>
+
+      <!-- Navigation Indicators / Counter on desktop when no seeAllLink -->
+      <div v-else-if="totalPages > 1" class="hidden md:flex items-center gap-[3px]">
         <span
           v-for="page in totalPages"
           :key="page"
@@ -77,6 +89,10 @@ const props = defineProps({
     default: () => []
   },
   mediaType: {
+    type: String,
+    default: ''
+  },
+  seeAllLink: {
     type: String,
     default: ''
   }

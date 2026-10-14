@@ -1,24 +1,31 @@
 <template>
-  <div v-if="item" class="relative w-full h-[70vh] md:h-[85vh] min-h-[500px] bg-surface flex items-center overflow-hidden">
+  <div 
+    v-if="item" 
+    class="relative w-full overflow-hidden transition-all duration-300
+           /* Mobile Netflix Floating Framed Card */
+           mx-auto max-w-[94%] sm:max-w-none mt-24 mb-4 sm:my-0 rounded-[26px] sm:rounded-none border border-white/10 sm:border-0 shadow-[0_20px_50px_rgba(0,0,0,0.85)] sm:shadow-none
+           h-[66vh] min-h-[480px] max-h-[600px] sm:h-[85vh] sm:min-h-[500px] sm:max-h-none bg-surface flex items-end sm:items-center"
+  >
     <!-- Background Image with Multi-layer Cinematic Vignette -->
     <div class="absolute inset-0 select-none pointer-events-none">
       <img
-        :src="backdrop(item.backdrop_path, 'original')"
+        :src="backdrop(item.backdrop_path, 'original') || poster(item.poster_path, 'original')"
         :alt="item.title || item.name"
-        class="w-full h-full object-cover scale-105 transform motion-safe:animate-pulse transition-transform duration-1000"
+        class="w-full h-full object-cover scale-105 transform motion-safe:animate-pulse transition-transform duration-1000 object-center sm:object-top"
         @error="handleImageError"
       />
       <div class="absolute inset-0 cinematic-fade-b"></div>
-      <div class="absolute inset-0 cinematic-fade-r"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-black/60"></div>
+      <div class="absolute inset-0 cinematic-fade-r hidden sm:block"></div>
+      <!-- Multi-stop Dark Bottom Gradient for mobile title legibility -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent sm:from-[#0a0a0c] sm:via-transparent sm:to-black/60"></div>
     </div>
 
     <!-- Content -->
-    <div class="container mx-auto px-4 md:px-8 relative z-10 pt-20">
-      <div class="max-w-2xl text-left space-y-4">
+    <div class="container mx-auto px-4 md:px-8 relative z-10 pb-6 sm:pb-0 sm:pt-20 w-full">
+      <div class="max-w-2xl text-center sm:text-left space-y-3 sm:space-y-4 mx-auto sm:mx-0">
         
-        <!-- Metadata Pill Badges -->
-        <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-surface-100/90 backdrop-blur-md border border-white/10 text-xs">
+        <!-- Metadata Pill Badges (Desktop) -->
+        <div class="hidden sm:inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-surface-100/90 backdrop-blur-md border border-white/10 text-xs">
           <span class="flex items-center text-[#E50914] font-bold font-mono">
             ★ {{ (item.vote_average || 0).toFixed(1) }}
           </span>
@@ -33,24 +40,65 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-4xl md:text-7xl font-display font-black text-white tracking-wide uppercase leading-none drop-shadow-2xl">
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-wide uppercase leading-tight drop-shadow-2xl px-2 sm:px-0">
           {{ item.title || item.name }}
         </h1>
+
+        <!-- Mobile Tagline (Like 'New episode coming on Wednesday') -->
+        <p class="sm:hidden text-xs text-bone-300 font-medium drop-shadow flex items-center justify-center gap-2">
+          <span class="text-[#E50914] font-bold">★ {{ (item.vote_average || 0).toFixed(1) }}</span>
+          <span>&bull;</span>
+          <span>Trending #1 Today</span>
+          <span>&bull;</span>
+          <span>{{ (item.media_type || defaultMediaType) === 'tv' ? 'TV Series' : 'Movie' }}</span>
+        </p>
         
-        <!-- Overview -->
-        <p class="text-bone-300 text-sm md:text-base line-clamp-3 leading-relaxed drop-shadow max-w-xl font-normal">
+        <!-- Overview (Desktop) -->
+        <p class="hidden sm:block text-bone-300 text-sm md:text-base line-clamp-3 leading-relaxed drop-shadow max-w-xl font-normal">
           {{ item.overview }}
         </p>
 
-        <!-- CTAs: Balanced 2x2 on Mobile, Flex on Desktop -->
-        <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 pt-2">
+        <!-- ============================================== -->
+        <!-- MOBILE NETFLIX DUAL CTAS: [ ▶ Play ] [ + My List ] -->
+        <!-- ============================================== -->
+        <div class="flex sm:hidden items-center gap-2.5 pt-2 px-1">
+          <!-- Play Show / Movie Button -->
+          <router-link
+            :to="streamRoute"
+            class="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-bone-100 text-black py-3 rounded-full font-bold text-sm shadow-[0_4px_20px_rgba(255,255,255,0.2)] active:scale-95 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-black" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+            <span>Play {{ (item.media_type || defaultMediaType) === 'tv' ? 'Show' : 'Movie' }}</span>
+          </router-link>
+
+          <!-- My List Button -->
+          <button
+            @click="handleToggleList"
+            class="flex-1 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white py-3 rounded-full font-bold text-sm border border-white/15 active:scale-95 transition-all cursor-pointer"
+          >
+            <svg v-if="isInList" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#E50914]" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span>{{ isInList ? 'In List' : 'My List' }}</span>
+          </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- DESKTOP ACTION BUTTONS -->
+        <!-- ============================================== -->
+        <div class="hidden sm:flex sm:flex-wrap sm:items-center sm:gap-3 pt-2">
           <!-- Watch Now (Play) -->
           <router-link
             :to="streamRoute"
-            class="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 text-white px-4 py-2.5 sm:px-7 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 shadow-[0_0_20px_rgba(229,9,20,0.5)] transform hover:-translate-y-0.5 active:scale-95"
+            class="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#E50914] to-[#FF1E27] hover:brightness-110 text-white px-7 py-3 rounded-full font-bold text-sm transition-all duration-300 shadow-[0_0_20px_rgba(229,9,20,0.5)] transform hover:-translate-y-0.5 active:scale-95"
           >
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-current ml-0.5 text-white" viewBox="0 0 20 20">
+            <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 fill-current ml-0.5 text-white" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
               </svg>
             </div>
@@ -61,7 +109,7 @@
           <button
             @click="openTrailer"
             :disabled="loadingTrailer"
-            class="inline-flex items-center justify-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 cursor-pointer"
+            class="inline-flex items-center justify-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 cursor-pointer"
             title="Watch Trailer"
           >
             <svg v-if="!loadingTrailer" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#E50914]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,7 +123,7 @@
           <!-- My List Toggle Button -->
           <button
             @click="handleToggleList"
-            class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
             :class="isInList 
               ? 'bg-[#E50914] hover:bg-[#FF1E27] text-white border-[#E50914] shadow-[0_0_20px_rgba(229,9,20,0.4)]' 
               : 'bg-surface-100/90 hover:bg-surface-200 text-white border-white/10 hover:border-white/25'"
@@ -92,17 +140,17 @@
           <!-- Random Movie Suggestion Button Next to My List -->
           <button
             @click="openSuggestion"
-            class="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-surface-100/90 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border border-white/10 hover:border-[#E50914]/50 transform hover:-translate-y-0.5 active:scale-95 group shadow-sm cursor-pointer"
+            class="inline-flex items-center justify-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-[#f5efe4] hover:text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-[#E50914]/50 transform hover:-translate-y-0.5 active:scale-95 group shadow-sm cursor-pointer"
             title="Random suggestion based on your watch history"
           >
-            <span class="group-hover:rotate-180 transition-transform duration-500 text-sm sm:text-base">🎲</span>
+            <span class="group-hover:rotate-180 transition-transform duration-500 text-base">🎲</span>
             <span>Surprise Me</span>
           </button>
           
           <!-- Overview for desktop -->
           <router-link
             :to="detailRoute"
-            class="hidden sm:inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95"
+            class="inline-flex items-center gap-2 bg-surface-100/90 hover:bg-surface-200 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border border-white/10 hover:border-white/25 transform hover:-translate-y-0.5 active:scale-95"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-bone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

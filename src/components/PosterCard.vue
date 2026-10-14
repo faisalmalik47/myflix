@@ -12,16 +12,30 @@
     />
     <div v-if="!imageLoaded" class="absolute inset-0 skeleton-shimmer"></div>
 
+    <!-- Netflix TOP 10 Badge (Screenshot 1, 2, 3) -->
+    <div v-if="isTop10" class="absolute top-1.5 left-1.5 bg-[#E50914] text-white font-black uppercase px-1 py-0.5 rounded shadow-md z-20 flex flex-col items-center pointer-events-none">
+      <span class="text-[6.5px] tracking-wider leading-none">TOP</span>
+      <span class="text-[9.5px] leading-none font-black">10</span>
+    </div>
+
     <!-- Rating Badge -->
-    <div class="absolute top-2.5 right-2.5 bg-[#0b0a08]/80 backdrop-blur-md text-[#f5efe4] px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center z-10 border border-[#f5efe4]/10 shadow-sm">
+    <div class="absolute top-2 right-2 bg-black/75 backdrop-blur-md text-[#f5efe4] px-1.5 py-0.5 rounded text-[10px] font-mono font-bold flex items-center z-10 border border-white/10 shadow-sm">
       <span class="text-[#c9a76a] mr-1">★</span>
       <span class="text-[#c9a76a]">{{ (item.vote_average || 0).toFixed(1) }}</span>
+    </div>
+
+    <!-- Netflix Bottom Red Ribbon Badge (Recently added / New Season / New Episode) -->
+    <div v-if="bottomBadge" class="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-opacity duration-200 group-hover:opacity-0">
+      <span class="bg-[#E50914] text-white text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded shadow-[0_2px_8px_rgba(0,0,0,0.85)] whitespace-nowrap">
+        {{ bottomBadge }}
+      </span>
     </div>
 
     <!-- Quick Watchlist Button -->
     <button 
       @click.stop="toggle" 
-      class="absolute top-2.5 left-2.5 p-1.5 rounded-full bg-[#0b0a08]/80 backdrop-blur-md hover:bg-[#0b0a08] transition-all z-20 border border-[#f5efe4]/10 hover:scale-110 active:scale-95"
+      class="absolute top-2 left-2 p-1.5 rounded-full bg-black/70 backdrop-blur-md hover:bg-black transition-all z-20 border border-white/10 hover:scale-110 active:scale-95"
+      :class="{ '!left-8': isTop10 }"
       :title="isInList ? 'Remove from Watchlist' : 'Add to Watchlist'"
     >
       <svg 
@@ -80,6 +94,20 @@ const imageLoaded = ref(false)
 
 const itemType = computed(() => props.item.media_type || (props.item.name ? 'tv' : 'movie'))
 const isInList = computed(() => isInWatchlist(props.item, itemType.value))
+
+const isTop10 = computed(() => {
+  return props.item.rank || props.item.isTop10 || (props.item.vote_average && props.item.vote_average >= 8.0)
+})
+
+const bottomBadge = computed(() => {
+  if (props.item.badge) return props.item.badge
+  const idMod = Math.abs(props.item.id || 0) % 5
+  if (idMod === 0) return 'Recently added'
+  if (idMod === 1 && itemType.value === 'tv') return 'New Season'
+  if (idMod === 2 && itemType.value === 'tv') return 'New Episode'
+  if (idMod === 3 && (props.item.vote_average || 0) > 7.5) return 'Watch Now'
+  return null
+})
 
 const toggle = () => {
   toggleWatchlist(props.item, itemType.value)
