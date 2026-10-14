@@ -60,6 +60,12 @@ export const discoverTv = (params = {}) =>
 export const getTvShow = (id) =>
   api.get(`/tv/${id}`, { params: { append_to_response: 'credits,videos,similar,recommendations' } }).then(r => r.data)
 
+export const getTvRecommendations = (id, page = 1) =>
+  api.get(`/tv/${id}/recommendations`, { params: { page } }).then(r => r.data)
+
+export const getTvSimilar = (id, page = 1) =>
+  api.get(`/tv/${id}/similar`, { params: { page } }).then(r => r.data)
+
 export const getSeason = (tvId, seasonNumber) =>
   api.get(`/tv/${tvId}/season/${seasonNumber}`).then(r => r.data)
 
