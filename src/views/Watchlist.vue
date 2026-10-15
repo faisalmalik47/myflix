@@ -9,11 +9,23 @@
 
         <button
           @click="openSuggestion"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#f5efe4] hover:text-white bg-white/5 hover:bg-[#E50914]/20 border border-white/10 hover:border-[#E50914]/50 transition-all duration-200 group ml-2 shadow-sm"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#f5efe4] hover:text-white bg-white/5 hover:bg-[#E50914]/20 border border-white/10 hover:border-[#E50914]/50 transition-all duration-200 group ml-2 shadow-sm cursor-pointer"
           title="Get a random movie recommendation based on your watch history"
         >
           <span class="group-hover:rotate-180 transition-transform duration-500">🎲</span>
           <span>Surprise Me</span>
+        </button>
+
+        <!-- Cloud Sync Status (Phone <-> Laptop) -->
+        <button
+          v-if="user"
+          @click="syncWatchlist"
+          :disabled="isSyncing"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-bone-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+          :title="isSyncing ? 'Syncing with Supabase...' : 'Synced with your Supabase account. Click to refresh.'"
+        >
+          <span :class="{ 'animate-spin': isSyncing }">☁️</span>
+          <span class="hidden sm:inline">{{ isSyncing ? 'Syncing...' : 'Synced' }}</span>
         </button>
       </div>
 
@@ -81,9 +93,11 @@ import { ref, computed } from 'vue'
 import PosterCard from '@/components/PosterCard.vue'
 import { useWatchlist } from '@/composables/useWatchlist.js'
 import { useRecommendation } from '@/composables/useRecommendation.js'
+import { useAuth } from '@/composables/useAuth.js'
 
-const { items, removeFromWatchlist } = useWatchlist()
+const { items, isSyncing, removeFromWatchlist, syncWatchlist } = useWatchlist()
 const { openSuggestion } = useRecommendation()
+const { user } = useAuth()
 
 const activeTab = ref('all')
 
